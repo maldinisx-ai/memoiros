@@ -1,0 +1,33 @@
+{
+  "name": "@memorios/core",
+  "version": "0.1.0",
+  "description": "MemoirOS - 智能回忆录写作系统核心模块",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --loader tsx test/fact-verifier.test.ts",
+    "test:verify": "node --loader tsx test/fact-verifier.test.ts",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "memoir",
+    "fact-verification",
+    "ai-writing",
+    "inkos"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
