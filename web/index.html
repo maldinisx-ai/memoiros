@@ -1,0 +1,3111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoirOS - 智能回忆录写作系统</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 1200px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      max-height: 900px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .header .status {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: #f8f9fa;
+      border-right: 1px solid #e9ecef;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #6c757d;
+      margin-bottom: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      background: #e9ecef;
+    }
+
+    .nav-item.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .nav-item.completed {
+      background: #28a745;
+      color: white;
+    }
+
+    .phase-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .phase-item {
+      padding: 8px 15px;
+      margin-bottom: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 13px;
+      margin-left: 10px;
+    }
+
+    .phase-item:hover {
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .phase-item.active {
+      background: rgba(102, 126, 234, 0.3);
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .phase-item.completed {
+      background: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
+
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel.active {
+      display: flex;
+    }
+
+    /* Interview Panel */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .message {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .message.agent {
+      flex-direction: row;
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .avatar.agent {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .avatar.user {
+      background: #28a745;
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .message.agent .message-content {
+      background: #f8f9fa;
+      border-top-left-radius: 4px;
+    }
+
+    .message.user .message-content {
+      background: #667eea;
+      color: white;
+      border-top-right-radius: 4px;
+    }
+
+    .input-area {
+      padding: 20px;
+      border-top: 1px solid #e9ecef;
+      background: #f8f9fa;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 10px;
+    }
+
+    textarea {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: none;
+      height: 50px;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    /* Outline Panel */
+    .outline-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .outline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .outline-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .outline-subtitle {
+      font-size: 16px;
+      color: #7f8c8d;
+      margin-top: 5px;
+    }
+
+    .outline-summary {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      line-height: 1.8;
+    }
+
+    .outline-themes {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .theme-tag {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .chapter-item {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s;
+    }
+
+    .chapter-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: #667eea;
+    }
+
+    .chapter-number {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .chapter-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .chapter-period {
+      font-size: 13px;
+      color: #7f8c8d;
+      margin-left: auto;
+    }
+
+    .chapter-focus {
+      color: #495057;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .chapter-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid #f1f3f5;
+    }
+
+    .chapter-words {
+      font-size: 13px;
+      color: #6c757d;
+    }
+
+    .write-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .write-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Chapter Panel */
+    .chapter-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    /* Chapter List View */
+    .chapter-list-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .chapter-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .chapter-list-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .chapter-list-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .chapter-card {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chapter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border-color: #667eea;
+    }
+
+    .chapter-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .chapter-card-number {
+      font-size: 12px;
+      color: #6c757d;
+      background: #f8f9fa;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .chapter-card-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .chapter-card-status.draft {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .chapter-card-status.published {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .chapter-card-status.archived {
+      background: #e2e3e5;
+      color: #383d41;
+    }
+
+    .chapter-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .chapter-card-preview {
+      font-size: 14px;
+      color: #6c757d;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .chapter-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #adb5bd;
+    }
+
+    .chapter-card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Chapter Detail View */
+    .chapter-detail-view {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .chapter-detail-header {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .chapter-detail-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .chapter-detail-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    .chapter-detail-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chapter-detail-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .chapter-content-header {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .chapter-content-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .chapter-content-meta {
+      color: #7f8c8d;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .chapter-text {
+      font-size: 16px;
+      line-height: 2;
+      color: #2c3e50;
+    }
+
+    .chapter-text p {
+      margin-bottom: 20px;
+      text-indent: 2em;
+    }
+
+    .back-btn {
+      background: #6c757d;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .export-btn {
+      background: #28a745;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .edit-btn {
+      background: #17a2b8;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    /* Profile Panel */
+    .profile-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .profile-section {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .profile-section h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f3f5;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .profile-item {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .profile-label {
+      font-size: 12px;
+      color: #6c757d;
+      margin-bottom: 5px;
+    }
+
+    .profile-value {
+      font-size: 14px;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    /* Buttons */
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-large {
+      font-size: 16px;
+      padding: 16px 32px;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: none;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-top-left-radius: 4px;
+      width: fit-content;
+    }
+
+    .typing-indicator.active {
+      display: block;
+    }
+
+    .typing-indicator span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6c757d;
+      margin: 0 2px;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+
+    /* Stats */
+    .stats {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 8px;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .stats-label {
+      color: #6c757d;
+    }
+
+    .stats-value {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    /* Timeline preview */
+    .timeline-preview {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      width: 300px;
+      max-height: 70vh;
+      overflow-y: auto;
+      display: none;
+      z-index: 1000;
+    }
+
+    .timeline-preview.visible {
+      display: block;
+    }
+
+    .timeline-preview h3 {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .timeline-event {
+      padding: 10px;
+      border-left: 3px solid #667eea;
+      margin-bottom: 10px;
+      background: #f8f9fa;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .timeline-event .year {
+      font-size: 12px;
+      color: #6c757d;
+      margin-bottom: 4px;
+    }
+
+    .timeline-event .title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .toggle-timeline {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 1000;
+    }
+
+    /* Action bar */
+    .action-bar {
+      padding: 20px;
+      background: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Identity Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .modal p {
+      color: #6c757d;
+      margin-bottom: 30px;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .modal input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+    }
+
+    .user-info {
+      padding: 10px 15px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info .name {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .user-info .switch {
+      font-size: 13px;
+      color: #6c757d;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .user-info .switch:hover {
+      color: #667eea;
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+    }
+
+    .empty-state .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    .empty-state .text {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state .hint {
+      font-size: 14px;
+      color: #adb5bd;
+    }
+
+    /* Loading States */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 16px;
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    /* Button Loading State */
+    button.loading {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    button.loading .btn-text {
+      visibility: hidden;
+    }
+
+    button.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 4000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 350px;
+    }
+
+    .toast {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      animation: slideIn 0.3s ease-out;
+      border-left: 4px solid #667eea;
+    }
+
+    .toast.success {
+      border-left-color: #28a745;
+    }
+
+    .toast.error {
+      border-left-color: #dc3545;
+    }
+
+    .toast.warning {
+      border-left-color: #ffc107;
+    }
+
+    .toast.info {
+      border-left-color: #17a2b8;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    .toast.removing {
+      animation: slideOut 0.3s ease-out forwards;
+    }
+
+    .toast-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+
+    .toast-message {
+      font-size: 13px;
+      color: #6c757d;
+      line-height: 1.4;
+    }
+
+    /* Panel Loading State */
+    .panel-loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: #6c757d;
+    }
+
+    .panel-loading.active {
+      display: flex;
+    }
+
+    .panel-loading .loading-spinner {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 16px;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .container {
+        height: 100vh;
+        max-height: none;
+        border-radius: 0;
+      }
+
+      .main {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .content-area {
+        flex: 1;
+      }
+
+      .message-content {
+        max-width: 85%;
+      }
+
+      .toast-container {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+      }
+
+      .chapter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal {
+        width: 95%;
+        padding: 30px 20px;
+      }
+
+      .timeline-preview {
+        display: none !important;
+      }
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      height: 4px;
+      background: #e9ecef;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+
+    /* Auto-save indicator */
+    .auto-save-indicator {
+      font-size: 12px;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .auto-save-indicator.saving {
+      opacity: 1;
+    }
+
+    .auto-save-indicator .dot {
+      width: 8px;
+      height: 8px;
+      background: #28a745;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Pagination Component */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 0;
+      margin-top: 20px;
+    }
+
+    .pagination-info {
+      font-size: 14px;
+      color: #6c757d;
+      margin-right: 12px;
+    }
+
+    .pagination button {
+      min-width: 36px;
+      height: 36px;
+      padding: 0 12px;
+      background: white;
+      color: #495057;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f8f9fa;
+    }
+
+    .pagination button.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .pagination .page-ellipsis {
+      padding: 0 4px;
+      color: #6c757d;
+    }
+
+    /* Load More Button */
+    .load-more-container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .load-more-btn {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+      padding: 12px 32px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .load-more-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .load-more-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* Infinite Scroll */
+    .infinite-scroll-trigger {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .infinite-scroll-trigger .loading-spinner {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingText">处理中...</div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1>MemoirOS</h1>
+      <div class="status" id="status">准备就绪</div>
+    </div>
+
+    <!-- User Info Display -->
+    <div id="userInfoBar" style="display: none; padding: 15px 20px; background: rgba(102, 126, 234, 0.1); border-bottom: 1px solid #e9ecef;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span style="font-size: 12px; color: #6c757d;">当前用户</span>
+          <div style="font-weight: 600; color: #667eea;" id="currentUserName"></div>
+        </div>
+        <button id="switchUserBtn" style="padding: 8px 16px; font-size: 13px; background: #6c757d;">切换用户</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="sidebar">
+        <h3>工作流程</h3>
+        <ul class="nav-list">
+          <li class="nav-item active" data-panel="interview">📝 采访</li>
+          <li class="nav-item" data-panel="profile">👤 用户画像</li>
+          <li class="nav-item" data-panel="outline">📋 大纲</li>
+          <li class="nav-item" data-panel="chapter">📖 回忆录</li>
+        </ul>
+
+        <h3 style="margin-top: 30px;">采访进度</h3>
+        <ul class="phase-list">
+          <li class="phase-item active" data-phase="warmup">👋 热身</li>
+          <li class="phase-item" data-phase="childhood">👶 童年</li>
+          <li class="phase-item" data-phase="education">🎓 教育</li>
+          <li class="phase-item" data-phase="career">💼 职业</li>
+          <li class="phase-item" data-phase="family">👨‍👩‍👧 家庭</li>
+          <li class="phase-item" data-phase="milestones">🎯 里程碑</li>
+          <li class="phase-item" data-phase="reflections">🤔 回顾</li>
+          <li class="phase-item" data-phase="closing">📝 收尾</li>
+        </ul>
+
+        <div class="stats">
+          <div class="stats-item">
+            <span class="stats-label">已回答问题</span>
+            <span class="stats-value" id="answeredCount">0</span>
+          </div>
+          <div class="stats-item">
+            <span class="stats-label">提取事件</span>
+            <span class="stats-value" id="eventCount">0</span>
+          </div>
+          <div class="stats-item">
+            <span class="stats-label">当前阶段</span>
+            <span class="stats-value" id="currentPhase">热身</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <!-- Interview Panel -->
+        <div class="panel active" id="panel-interview">
+          <div class="chat-area">
+            <div class="messages" id="messages">
+              <div class="message agent">
+                <div class="avatar agent">🤖</div>
+                <div class="message-content">
+                  你好！我是 MemoirOS 的采访助手。我会通过一系列问题，帮助你回忆和整理人生故事，最终生成一本属于你的回忆录。
+
+                  让我们从简单的问题开始吧！你能介绍一下你自己吗？比如你是在哪里出生的，哪一年出生的？
+                </div>
+              </div>
+
+              <div class="typing-indicator" id="typing">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <div class="input-area">
+              <div class="input-wrapper">
+                <textarea
+                  id="userInput"
+                  placeholder="分享你的故事..."
+                  rows="1"
+                ></textarea>
+                <button id="sendBtn">发送</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Panel -->
+        <div class="panel" id="panel-profile">
+          <div class="profile-panel" id="profileContent">
+            <div class="empty-state">
+              <div class="icon">👤</div>
+              <div class="text">用户画像尚未生成</div>
+              <div class="hint">请先完成采访，然后点击下方按钮生成用户画像</div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button class="btn-success btn-large" id="generateProfileBtn">🔄 生成用户画像</button>
+          </div>
+        </div>
+
+        <!-- Outline Panel -->
+        <div class="panel" id="panel-outline">
+          <div class="outline-panel" id="outlineContent">
+            <div class="empty-state">
+              <div class="icon">📋</div>
+              <div class="text">回忆录大纲尚未生成</div>
+              <div class="hint">请先生成用户画像，然后点击下方按钮生成大纲</div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button class="btn-large" id="generateOutlineBtn">📋 生成回忆录大纲</button>
+          </div>
+        </div>
+
+        <!-- Chapter Panel -->
+        <div class="panel" id="panel-chapter">
+          <div class="chapter-panel" id="chapterContent">
+            <div class="chapter-list-container">
+              <div class="chapter-list-header">
+                <div class="chapter-list-title">我的章节</div>
+                <div class="chapter-list-actions">
+                  <button class="btn-small" id="refreshChaptersBtn">🔄 刷新</button>
+                  <button class="btn-small export-btn" id="exportAllBtn">📥 导出全部</button>
+                </div>
+              </div>
+              <div class="chapter-grid" id="chapterGrid">
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                  <div class="icon">📖</div>
+                  <div class="text">回忆录章节尚未撰写</div>
+                  <div class="hint">请先生成大纲，然后选择章节进行撰写</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="toggle-timeline" id="toggleTimeline" title="查看时间线">📅</button>
+
+  <!-- Identity Modal -->
+  <div class="modal-overlay" id="identityModal">
+    <div class="modal">
+      <h2>👋 欢迎使用 MemoirOS</h2>
+      <p>请选择你的身份类型</p>
+      <div class="modal-buttons" style="margin-bottom: 20px;">
+        <button class="btn-large" id="returningUserBtn">我是老用户</button>
+        <button class="btn-large btn-secondary" id="newUserBtn">我是新用户</button>
+      </div>
+
+      <!-- 老用户输入 -->
+      <div id="returningUserForm" style="display: none;">
+        <p style="font-size: 14px; margin-bottom: 15px;">请输入你之前使用的手机号、邮箱或用户名</p>
+        <input
+          type="text"
+          id="returningInput"
+          placeholder="手机号 / 邮箱 / 用户名"
+          autocomplete="off"
+        >
+        <div class="modal-buttons">
+          <button class="btn-large" id="loadUserDataBtn">加载我的数据</button>
+          <button class="btn-secondary" id="backToChoiceBtn">返回</button>
+        </div>
+      </div>
+
+      <!-- 新用户输入 -->
+      <div id="newUserForm" style="display: none;">
+        <p style="font-size: 14px; margin-bottom: 15px;">请输入你的手机号、邮箱或用户名来创建新档案</p>
+        <input
+          type="text"
+          id="newUserInput"
+          placeholder="手机号 / 邮箱 / 用户名"
+          autocomplete="off"
+        >
+        <div class="modal-buttons">
+          <button class="btn-success btn-large" id="createNewUserBtn">创建新档案</button>
+          <button class="btn-secondary" id="backToChoiceBtn2">返回</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-preview" id="timelinePreview">
+    <h3>📅 时间线</h3>
+    <div id="timelineEvents"></div>
+  </div>
+
+  <script>
+    // ============================================
+    // Utility Functions
+    // ============================================
+
+    // API Configuration
+    const API_BASE = 'http://localhost:3000/api';
+
+    /**
+     * Loading Overlay Control
+     */
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+
+    function showLoading(message = '处理中...') {
+      loadingText.textContent = message;
+      loadingOverlay.classList.add('active');
+    }
+
+    function hideLoading() {
+      loadingOverlay.classList.remove('active');
+    }
+
+    /**
+     * Toast Notification System
+     */
+    const toastContainer = document.getElementById('toastContainer');
+
+    function showToast(type, title, message, duration = 4000) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+
+      const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+      };
+
+      toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || icons.info}</div>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+      `;
+
+      toastContainer.appendChild(toast);
+
+      // Auto remove
+      setTimeout(() => {
+        toast.classList.add('removing');
+        toast.addEventListener('animationend', () => {
+          toast.remove();
+        });
+      }, duration);
+
+      return toast;
+    }
+
+    // Toast shortcuts
+    const toast = {
+      success: (title, message, duration) => showToast('success', title, message, duration),
+      error: (title, message, duration) => showToast('error', title, message, duration),
+      warning: (title, message, duration) => showToast('warning', title, message, duration),
+      info: (title, message, duration) => showToast('info', title, message, duration),
+    };
+
+    /**
+     * Button Loading State
+     */
+    function setButtonLoading(button, isLoading, originalText = '') {
+      if (isLoading) {
+        button.classList.add('loading');
+        button.dataset.originalText = button.textContent;
+        button.disabled = true;
+      } else {
+        button.classList.remove('loading');
+        button.disabled = false;
+        button.textContent = button.dataset.originalText || originalText;
+      }
+    }
+
+    /**
+     * API Request Wrapper with Error Handling
+     */
+    async function apiRequest(url, options = {}) {
+      const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+      try {
+        const response = await fetch(`${API_BASE}${url}`, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Request-ID': requestId,
+            ...options.headers,
+          },
+        });
+
+        const data = await response.json();
+
+        // Handle standardized error responses
+        if (!response.ok || data.success === false) {
+          // Handle new error format
+          if (data.error) {
+            throw new APIError(
+              data.error.code,
+              data.error.message,
+              data.error.details,
+              response.status
+            );
+          }
+          // Handle legacy error format
+          throw new APIError(
+            'UNKNOWN_ERROR',
+            data.message || data.error || '请求失败',
+            [],
+            response.status
+          );
+        }
+
+        return data;
+      } catch (error) {
+        if (error instanceof APIError) {
+          throw error;
+        }
+        // Network or other errors
+        throw new APIError(
+          'NETWORK_ERROR',
+          error.message || '网络连接失败，请检查网络设置',
+          [],
+          0
+        );
+      }
+    }
+
+    /**
+     * Custom API Error Class
+     */
+    class APIError extends Error {
+      constructor(code, message, details = [], status) {
+        super(message);
+        this.code = code;
+        this.details = details;
+        this.status = status;
+        this.name = 'APIError';
+      }
+
+      // Get user-friendly error message
+      getUserMessage() {
+        const messages = {
+          'VALIDATION_ERROR': '请检查输入数据是否正确',
+          'INVALID_INPUT': '输入数据格式不正确',
+          'UNAUTHORIZED': '请先登录',
+          'NOT_FOUND': '请求的资源不存在',
+          'INTERNAL_ERROR': '服务器错误，请稍后重试',
+          'LLM_ERROR': 'AI 服务暂时不可用，请稍后重试',
+          'NETWORK_ERROR': '网络连接失败，请检查网络设置',
+          'SESSION_EXPIRED': '会话已过期，请重新登录',
+        };
+        return messages[this.code] || this.message;
+      }
+
+      // Check if validation error
+      isValidationError() {
+        return this.code === 'VALIDATION_ERROR';
+      }
+
+      // Get first field error
+      getFirstFieldError() {
+        if (this.details && this.details.length > 0) {
+          return this.details[0].message;
+        }
+        return null;
+      }
+    }
+
+    /**
+     * Auto-save utility
+     */
+    const autoSave = {
+      timer: null,
+      delay: 2000, // 2 seconds
+      isSaving: false,
+
+      schedule(callback) {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+          this.execute(callback);
+        }, this.delay);
+      },
+
+      async execute(callback) {
+        if (this.isSaving) {
+          this.schedule(callback);
+          return;
+        }
+
+        this.isSaving = true;
+        const indicator = document.querySelector('.auto-save-indicator');
+        if (indicator) {
+          indicator.classList.add('saving');
+        }
+
+        try {
+          await callback();
+        } finally {
+          this.isSaving = false;
+          if (indicator) {
+            setTimeout(() => {
+              indicator.classList.remove('saving');
+            }, 1000);
+          }
+        }
+      },
+
+      cancel() {
+        if (this.timer) {
+          clearTimeout(this.timer);
+          this.timer = null;
+        }
+      }
+    };
+
+    /**
+     * Panel loading state
+     */
+    function showPanelLoading(panelId) {
+      const panel = document.getElementById(`panel-${panelId}`);
+      if (!panel) return;
+
+      // Hide existing content
+      const content = panel.querySelector('.panel-content, .profile-panel, .outline-panel, .chapter-panel');
+      if (content) {
+        content.style.display = 'none';
+      }
+
+      // Show loading state
+      let loading = panel.querySelector('.panel-loading');
+      if (!loading) {
+        loading = document.createElement('div');
+        loading.className = 'panel-loading';
+        loading.innerHTML = `
+          <div class="loading-spinner"></div>
+          <div>加载中...</div>
+        `;
+        panel.appendChild(loading);
+      }
+      loading.classList.add('active');
+    }
+
+    function hidePanelLoading(panelId) {
+      const panel = document.getElementById(`panel-${panelId}`);
+      if (!panel) return;
+
+      const loading = panel.querySelector('.panel-loading');
+      if (loading) {
+        loading.classList.remove('active');
+      }
+
+      // Show content
+      const content = panel.querySelector('.panel-content, .profile-panel, .outline-panel, .chapter-panel');
+      if (content) {
+        content.style.display = '';
+      }
+    }
+
+    // ============================================
+    // Application State
+    // ============================================
+
+    // State
+    let currentPanel = 'interview';
+    let currentPhase = 'warmup';
+    let interviewId = null;
+    let userId = null;
+    let answeredCount = 0;
+    let eventCount = 0;
+    let userProfile = null;
+    let memoirOutline = null;
+    let selectedChapter = null;
+
+    // DOM Elements
+    const messagesContainer = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const typingIndicator = document.getElementById('typing');
+    const statusEl = document.getElementById('status');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const eventCountEl = document.getElementById('eventCount');
+    const currentPhaseEl = document.getElementById('currentPhase');
+    const toggleTimelineBtn = document.getElementById('toggleTimeline');
+    const timelinePreview = document.getElementById('timelinePreview');
+    const timelineEventsEl = document.getElementById('timelineEvents');
+    const generateProfileBtn = document.getElementById('generateProfileBtn');
+    const generateOutlineBtn = document.getElementById('generateOutlineBtn');
+    const identityModal = document.getElementById('identityModal');
+    const returningUserBtn = document.getElementById('returningUserBtn');
+    const newUserBtn = document.getElementById('newUserBtn');
+    const returningUserForm = document.getElementById('returningUserForm');
+    const newUserForm = document.getElementById('newUserForm');
+    const returningInput = document.getElementById('returningInput');
+    const newUserInput = document.getElementById('newUserInput');
+    const loadUserDataBtn = document.getElementById('loadUserDataBtn');
+    const createNewUserBtn = document.getElementById('createNewUserBtn');
+    const backToChoiceBtn = document.getElementById('backToChoiceBtn');
+    const backToChoiceBtn2 = document.getElementById('backToChoiceBtn2');
+    const userInfoBar = document.getElementById('userInfoBar');
+    const currentUserName = document.getElementById('currentUserName');
+    const switchUserBtn = document.getElementById('switchUserBtn');
+
+    // ============================================
+    // Progress Persistence (Auto-save)
+    // ============================================
+
+    const PROGRESS_KEY = 'memoiros_progress';
+    const DRAFT_KEY = 'memoiros_draft';
+
+    /**
+     * Save current progress to localStorage
+     */
+    function saveProgress() {
+      if (!userId || !interviewId) return;
+
+      const progress = {
+        currentPanel,
+        currentPhase,
+        interviewId,
+        userId,
+        answeredCount,
+        eventCount,
+        timestamp: Date.now(),
+      };
+
+      try {
+        localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+      } catch (e) {
+        console.warn('Failed to save progress:', e);
+      }
+    }
+
+    /**
+     * Load progress from localStorage
+     */
+    function loadProgress() {
+      try {
+        const saved = localStorage.getItem(PROGRESS_KEY);
+        if (!saved) return null;
+
+        const progress = JSON.parse(saved);
+
+        // Check if progress is for current user and not too old (24 hours)
+        const isRecent = Date.now() - progress.timestamp < 24 * 60 * 60 * 1000;
+        const isSameUser = progress.userId === userId;
+
+        if (isSameUser && isRecent) {
+          return progress;
+        }
+      } catch (e) {
+        console.warn('Failed to load progress:', e);
+      }
+      return null;
+    }
+
+    /**
+     * Save input draft
+     */
+    function saveDraft(input) {
+      if (!userId) return;
+
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          userId,
+          interviewId,
+          draft: input,
+          timestamp: Date.now(),
+        }));
+      } catch (e) {
+        console.warn('Failed to save draft:', e);
+      }
+    }
+
+    /**
+     * Load input draft
+     */
+    function loadDraft() {
+      try {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (!saved) return null;
+
+        const draft = JSON.parse(saved);
+
+        // Only return draft for current user and interview
+        if (draft.userId === userId && draft.interviewId === interviewId) {
+          // Check if draft is not too old (1 hour)
+          if (Date.now() - draft.timestamp < 60 * 60 * 1000) {
+            return draft.draft;
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to load draft:', e);
+      }
+      return null;
+    }
+
+    /**
+     * Clear draft
+     */
+    function clearDraft() {
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch (e) {
+        console.warn('Failed to clear draft:', e);
+      }
+    }
+
+    /**
+     * Auto-save on state changes
+     */
+    function setupAutoSave() {
+      // Save progress when switching panels
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          setTimeout(saveProgress, 100);
+        });
+      });
+
+      // Auto-save input draft
+      userInput.addEventListener('input', () => {
+        autoSave.schedule(() => saveDraft(userInput.value));
+      });
+
+      // Save progress periodically (every 30 seconds)
+      setInterval(() => {
+        saveProgress();
+      }, 30000);
+    }
+
+    // Initialize auto-save
+    setupAutoSave();
+
+    // ============================================
+    // Application Initialization
+    // ============================================
+
+    // Initialize interview on page load
+    async function initInterview() {
+      // Try to restore from localStorage first
+      const savedUserId = localStorage.getItem('memoiros_userId');
+      const savedInterviewId = localStorage.getItem('memoiros_interviewId');
+      const savedIdentifier = localStorage.getItem('memoiros_identifier');
+
+      if (savedUserId && savedInterviewId) {
+        userId = savedUserId;
+        interviewId = savedInterviewId;
+
+        // Check if we can restore the session
+        try {
+          const response = await apiRequest(`/user/${userId}/interviews`);
+          if (response.interviews && response.interviews.length > 0) {
+            const latestInterview = response.interviews[0];
+            if (latestInterview.interviewId === interviewId) {
+              // Restore session
+              currentPhase = latestInterview.phase;
+              answeredCount = latestInterview.answers?.length || 0;
+
+              // Restore messages
+              latestInterview.answers?.forEach(answer => {
+                addMessage(answer.answer, true);
+              });
+
+              // Update UI
+              answeredCountEl.textContent = answeredCount;
+              updatePhaseIndicator();
+
+              // Show user info
+              userInfoBar.style.display = 'block';
+              currentUserName.textContent = savedIdentifier || userId;
+
+              // Try to restore draft
+              const draft = loadDraft();
+              if (draft) {
+                userInput.value = draft;
+                toast.info('草稿已恢复', '你之前的输入已恢复');
+              }
+
+              // Try to restore progress (panel selection)
+              const progress = loadProgress();
+              if (progress) {
+                // Restore panel after a delay
+                setTimeout(() => {
+                  const panelItem = document.querySelector(`[data-panel="${progress.currentPanel}"]`);
+                  if (panelItem) {
+                    panelItem.click();
+                  }
+                }, 500);
+              }
+
+              statusEl.textContent = '欢迎回来！';
+              return; // Skip identity modal
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to restore session:', e);
+        }
+      }
+
+      // Show identity modal if no session to restore
+      identityModal.classList.add('active');
+    }
+
+    // Show returning user form
+    returningUserBtn.addEventListener('click', () => {
+      returningUserBtn.parentElement.style.display = 'none';
+      returningUserForm.style.display = 'block';
+      returningInput.focus();
+    });
+
+    // Show new user form
+    newUserBtn.addEventListener('click', () => {
+      newUserBtn.parentElement.style.display = 'none';
+      newUserForm.style.display = 'block';
+      newUserInput.focus();
+    });
+
+    // Back to choice
+    backToChoiceBtn.addEventListener('click', () => {
+      returningUserForm.style.display = 'none';
+      returningUserBtn.parentElement.style.display = 'flex';
+    });
+
+    backToChoiceBtn2.addEventListener('click', () => {
+      newUserForm.style.display = 'none';
+      newUserBtn.parentElement.style.display = 'flex';
+    });
+
+    // 老用户：加载现有数据
+    async function handleReturningUser() {
+      const identifier = returningInput.value.trim();
+      if (!identifier) {
+        alert('请输入手机号、邮箱或用户名');
+        return;
+      }
+
+      loadUserDataBtn.disabled = true;
+      loadUserDataBtn.textContent = '正在查找...';
+      statusEl.textContent = '正在查找你的数据...';
+
+      try {
+        // 先查找用户
+        const normalizedId = identifier.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+        userId = `user_${normalizedId}`;
+
+        const response = await fetch(`${API_BASE}/user/${userId}/interviews`);
+        const data = await response.json();
+
+        if (data.interviews && data.interviews.length > 0) {
+          // 找到数据，加载
+          const latestInterview = data.interviews[0];
+
+          interviewId = latestInterview.interviewId;
+          currentPhase = latestInterview.phase;
+
+          // Save to localStorage
+          localStorage.setItem('memoiros_userId', userId);
+          localStorage.setItem('memoiros_interviewId', interviewId);
+          localStorage.setItem('memoiros_identifier', identifier);
+
+          // Restore messages
+          latestInterview.answers.forEach(answer => {
+            addMessage(answer.answer, true);
+          });
+          answeredCount = latestInterview.answers.length;
+          answeredCountEl.textContent = answeredCount;
+
+          // Update UI
+          identityModal.classList.remove('active');
+          userInfoBar.style.display = 'block';
+          currentUserName.textContent = identifier;
+
+          updatePhaseIndicator();
+          statusEl.textContent = `欢迎回来！已恢复 ${answeredCount} 条回答`;
+          console.log('Interview restored:', interviewId);
+        } else {
+          // 没找到数据
+          alert('未找到你的数据，请检查输入或选择"我是新用户"创建新档案');
+        }
+      } catch (error) {
+        console.error('Failed to load user:', error);
+        alert('加载数据失败，请重试');
+        statusEl.textContent = '错误';
+      } finally {
+        loadUserDataBtn.disabled = false;
+        loadUserDataBtn.textContent = '加载我的数据';
+      }
+    }
+
+    // 新用户：创建新档案
+    async function handleNewUser() {
+      const identifier = newUserInput.value.trim();
+      if (!identifier) {
+        alert('请输入手机号、邮箱或用户名');
+        return;
+      }
+
+      createNewUserBtn.disabled = true;
+      createNewUserBtn.textContent = '正在创建...';
+      statusEl.textContent = '正在创建新档案...';
+
+      try {
+        // 创建新采访
+        const normalizedId = identifier.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+        userId = `user_${normalizedId}`;
+
+        const response = await fetch(`${API_BASE}/interview/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        });
+
+        const data = await response.json();
+
+        // Use the returned interviewId
+        interviewId = data.interviewId;
+        currentPhase = data.phase;
+
+        // Save to localStorage
+        localStorage.setItem('memoiros_userId', userId);
+        localStorage.setItem('memoiros_interviewId', interviewId);
+        localStorage.setItem('memoiros_identifier', identifier);
+
+        // Update UI
+        identityModal.classList.remove('active');
+        userInfoBar.style.display = 'block';
+        currentUserName.textContent = identifier;
+
+        updatePhaseIndicator();
+        statusEl.textContent = '准备就绪，开始采访吧！';
+        console.log('New interview started:', interviewId);
+      } catch (error) {
+        console.error('Failed to create user:', error);
+        alert('创建档案失败，请重试');
+        statusEl.textContent = '错误';
+      } finally {
+        createNewUserBtn.disabled = false;
+        createNewUserBtn.textContent = '创建新档案';
+      }
+    }
+
+    // Switch user
+    function switchUser() {
+      // Clear current session
+      localStorage.removeItem('memoiros_userId');
+      localStorage.removeItem('memoiros_interviewId');
+      localStorage.removeItem('memoiros_identifier');
+
+      // Clear UI
+      userId = null;
+      interviewId = null;
+      answeredCount = 0;
+      userProfile = null;
+      memoirOutline = null;
+
+      // Reset UI elements
+      messagesContainer.innerHTML = `
+        <div class="message agent">
+          <div class="avatar agent">🤖</div>
+          <div class="message-content">
+            你好！我是 MemoirOS 的采访助手。我会通过一系列问题，帮助你回忆和整理人生故事，最终生成一本属于你的回忆录。
+
+            让我们从简单的问题开始吧！你能介绍一下你自己吗？比如你是在哪里出生的，哪一年出生的？
+          </div>
+        </div>
+        <div class="typing-indicator" id="typing">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
+      answeredCountEl.textContent = '0';
+      currentPhaseEl.textContent = '热身';
+      currentPhase = 'warmup';
+      userInfoBar.style.display = 'none';
+
+      // Reset panels
+      document.getElementById('profileContent').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">👤</div>
+          <div class="text">用户画像尚未生成</div>
+          <div class="hint">请先完成采访，然后点击下方按钮生成用户画像</div>
+        </div>
+      `;
+      document.getElementById('outlineContent').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          <div class="text">回忆录大纲尚未生成</div>
+          <div class="hint">请先生成用户画像，然后点击下方按钮生成大纲</div>
+        </div>
+      `;
+      document.getElementById('chapterContent').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📖</div>
+          <div class="text">回忆录章节尚未撰写</div>
+          <div class="hint">请先生成大纲，然后选择章节进行撰写</div>
+        </div>
+      `;
+
+      // Reset modal to initial state
+      returningUserBtn.parentElement.style.display = 'flex';
+      returningUserForm.style.display = 'none';
+      newUserForm.style.display = 'none';
+      returningInput.value = '';
+      newUserInput.value = '';
+
+      // Show identity modal
+      identityModal.classList.add('active');
+    }
+
+    // Panel navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const panel = item.dataset.panel;
+        if (panel === 'chapter' && !memoirOutline) {
+          alert('请先生成回忆录大纲！');
+          return;
+        }
+        if (panel === 'outline' && !userProfile) {
+          alert('请先生成用户画像！');
+          return;
+        }
+        if (panel === 'profile' && answeredCount === 0) {
+          alert('请先完成一些采访问题！');
+          return;
+        }
+
+        // Update active state
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // Show panel
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(`panel-${panel}`).classList.add('active');
+
+        currentPanel = panel;
+
+        // Load chapter list when switching to chapter panel
+        if (panel === 'chapter') {
+          loadChapterList();
+        }
+      });
+    });
+
+    // Add message to chat
+    function addMessage(content, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user' : 'agent'}`;
+      messageDiv.innerHTML = `
+        <div class="avatar ${isUser ? 'user' : 'agent'}">${isUser ? '👤' : '🤖'}</div>
+        <div class="message-content">${content}</div>
+      `;
+      messagesContainer.insertBefore(messageDiv, typingIndicator);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Show/hide typing indicator
+    function setTyping(show) {
+      if (show) {
+        typingIndicator.classList.add('active');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      } else {
+        typingIndicator.classList.remove('active');
+      }
+    }
+
+    // Send message with streaming support
+    async function sendMessage() {
+      const content = userInput.value.trim();
+      if (!content) return;
+
+      // Clear draft since we're sending it
+      clearDraft();
+
+      addMessage(content, true);
+      userInput.value = '';
+      sendBtn.disabled = true;
+      setTyping(true);
+      statusEl.textContent = '正在处理...';
+
+      try {
+        // Use streaming endpoint
+        await sendMessageStream(content);
+      } catch (error) {
+        setTyping(false);
+
+        // Handle API errors gracefully
+        let errorMessage = '抱歉，处理你的回答时出现了错误。请稍后再试。';
+        if (error instanceof APIError) {
+          errorMessage = error.getUserMessage();
+          toast.error('请求失败', errorMessage);
+        } else if (error.message) {
+          errorMessage = `错误: ${error.message}`;
+        }
+
+        addMessage(errorMessage);
+        statusEl.textContent = '错误';
+        console.error('Error:', error);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    /**
+     * Send message with streaming response
+     */
+    async function sendMessageStream(answer) {
+      return new Promise((resolve, reject) => {
+        const eventSource = new EventSource(
+          `${API_BASE}/interview/process/stream?interviewId=${encodeURIComponent(interviewId)}&answer=${encodeURIComponent(answer)}`
+        );
+
+        let agentMessageDiv = null;
+        let agentMessageContent = null;
+        let responseData = null;
+
+        eventSource.addEventListener('start', (e) => {
+          const data = JSON.parse(e.data);
+          statusEl.textContent = data.message || '正在处理...';
+        });
+
+        eventSource.addEventListener('question', (e) => {
+          const data = JSON.parse(e.data);
+          responseData = data;
+
+          // Hide typing indicator
+          setTyping(false);
+
+          // Add agent message if not already added
+          if (!agentMessageDiv) {
+            addMessage(data.nextQuestion || '感谢你的分享！');
+          }
+
+          // Update state
+          if (data.phase && data.phase !== currentPhase) {
+            currentPhase = data.phase;
+            updatePhaseIndicator();
+          }
+
+          answeredCount++;
+          answeredCountEl.textContent = answeredCount;
+          statusEl.textContent = '准备就绪';
+
+          // Save progress
+          saveProgress();
+
+          resolve(data);
+        });
+
+        eventSource.addEventListener('error', (e) => {
+          eventSource.close();
+          setTyping(false);
+
+          const data = e.data ? JSON.parse(e.data) : {};
+          const error = new APIError(
+            data.code || 'STREAM_ERROR',
+            data.error || '流式连接错误',
+            data.details || [],
+            0
+          );
+          reject(error);
+        });
+
+        eventSource.addEventListener('done', () => {
+          eventSource.close();
+          if (!responseData) {
+            // No question event received, resolve with current state
+            resolve({});
+          }
+        });
+
+        // Handle connection errors
+        eventSource.onerror = (error) => {
+          eventSource.close();
+          setTyping(false);
+          reject(new Error('连接中断，请重试'));
+        };
+
+        // Timeout after 60 seconds
+        setTimeout(() => {
+          if (eventSource.readyState !== EventSource.CLOSED) {
+            eventSource.close();
+            setTyping(false);
+            reject(new Error('请求超时，请重试'));
+          }
+        }, 60000);
+      });
+    }
+
+    // Legacy non-streaming fallback
+    async function sendMessageLegacy(content) {
+      const response = await fetch(`${API_BASE}/interview/process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interviewId,
+          answer: content,
+        }),
+      });
+
+      const data = await response.json();
+
+      // Check for error response
+      if (!response.ok || data.success === false) {
+        throw new APIError(
+          data.error?.code || 'REQUEST_ERROR',
+          data.error?.message || data.message || '请求失败',
+          data.error?.details || [],
+          response.status
+        );
+      }
+
+      if (data.interviewId) {
+        interviewId = data.interviewId;
+        localStorage.setItem('memoiros_interviewId', interviewId);
+      }
+      answeredCount++;
+      answeredCountEl.textContent = answeredCount;
+
+      setTyping(false);
+      addMessage(data.nextQuestion || '感谢你的分享！让我们继续下一个话题。');
+
+      if (data.phase && data.phase !== currentPhase) {
+        currentPhase = data.phase;
+        updatePhaseIndicator();
+      }
+
+      statusEl.textContent = '准备就绪';
+      return data;
+    }
+
+    // Update phase indicator
+    function updatePhaseIndicator() {
+      document.querySelectorAll('.phase-item').forEach(item => {
+        item.classList.remove('active', 'completed');
+        if (item.dataset.phase === currentPhase) {
+          item.classList.add('active');
+        }
+      });
+
+      const phaseNames = {
+        warmup: '热身',
+        childhood: '童年',
+        education: '教育',
+        career: '职业',
+        family: '家庭',
+        milestones: '里程碑',
+        reflections: '回顾',
+        closing: '收尾',
+      };
+      currentPhaseEl.textContent = phaseNames[currentPhase] || currentPhase;
+    }
+
+    // Generate user profile
+    generateProfileBtn.addEventListener('click', async () => {
+      if (answeredCount === 0) {
+        alert('请先完成一些采访问题！');
+        return;
+      }
+
+      generateProfileBtn.disabled = true;
+      statusEl.textContent = '正在生成用户画像...';
+
+      try {
+        const response = await fetch(`${API_BASE}/preprocess`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            interviewId,
+            includeTimeline: true,
+            includeVoiceProfile: true,
+          }),
+        });
+
+        const data = await response.json();
+        userProfile = data.profile;
+        renderProfile(data);
+        statusEl.textContent = '用户画像生成完成';
+      } catch (error) {
+        console.error('Failed to generate profile:', error);
+        alert('生成用户画像失败，请稍后再试。');
+        statusEl.textContent = '错误';
+      } finally {
+        generateProfileBtn.disabled = false;
+      }
+    });
+
+    // Render profile
+    function renderProfile(data) {
+      const profileContent = document.getElementById('profileContent');
+      const { profile, summary, suggestions } = data;
+
+      profileContent.innerHTML = `
+        <div class="profile-section">
+          <h3>📋 摘要</h3>
+          <div style="line-height: 1.8;">${summary || '暂无摘要'}</div>
+        </div>
+
+        <div class="profile-section">
+          <h3>👤 基本信息</h3>
+          <div class="profile-grid">
+            <div class="profile-item">
+              <div class="profile-label">出生年份</div>
+              <div class="profile-value">${profile.basicInfo.birthYear || '未知'}</div>
+            </div>
+            <div class="profile-item">
+              <div class="profile-label">出生月份</div>
+              <div class="profile-value">${profile.basicInfo.birthMonth || '未知'}</div>
+            </div>
+            <div class="profile-item">
+              <div class="profile-label">出生地点</div>
+              <div class="profile-value">${profile.basicInfo.birthPlace || '未知'}</div>
+            </div>
+            <div class="profile-item">
+              <div class="profile-label">教育背景</div>
+              <div class="profile-value">${profile.basicInfo.education || '未知'}</div>
+            </div>
+            <div class="profile-item">
+              <div class="profile-label">职业经历</div>
+              <div class="profile-value">${profile.basicInfo.career || '未知'}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3>📅 时间线事件</h3>
+          <div style="max-height: 300px; overflow-y: auto;">
+            ${profile.timeline.map(event => `
+              <div style="padding: 10px; border-left: 3px solid #667eea; background: #f8f9fa; border-radius: 0 8px 8px 0; margin-bottom: 10px;">
+                <div style="font-size: 12px; color: #6c757d;">${event.date.year || ''}年${event.date.month || ''}</div>
+                <div style="font-weight: 600;">${event.title}</div>
+                <div style="font-size: 13px; color: #6c757d; margin-top: 5px;">${event.description || ''}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3>🎯 核心主题</h3>
+          <div class="outline-themes">
+            ${profile.themes.map(theme => `
+              <span class="theme-tag">${theme.theme}</span>
+            `).join('')}
+          </div>
+        </div>
+
+        ${suggestions ? `
+        <div class="profile-section">
+          <h3>💡 改进建议</h3>
+          <ul style="padding-left: 20px; line-height: 1.8;">
+            ${suggestions.map(s => `<li>${s}</li>`).join('')}
+          </ul>
+        </div>
+        ` : ''}
+      `;
+    }
+
+    // Generate memoir outline
+    generateOutlineBtn.addEventListener('click', async () => {
+      if (!userProfile) {
+        alert('请先生成用户画像！');
+        return;
+      }
+
+      generateOutlineBtn.disabled = true;
+      statusEl.textContent = '正在生成回忆录大纲...';
+
+      try {
+        const response = await fetch(`${API_BASE}/memoir/outline`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            interviewId,
+            targetChapters: 10,
+            structure: 'chronological',
+          }),
+        });
+
+        const data = await response.json();
+        memoirOutline = data.outline;
+        renderOutline(data.outline);
+        statusEl.textContent = '大纲生成完成';
+      } catch (error) {
+        console.error('Failed to generate outline:', error);
+        alert('生成大纲失败，请稍后再试。');
+        statusEl.textContent = '错误';
+      } finally {
+        generateOutlineBtn.disabled = false;
+      }
+    });
+
+    // Render outline
+    function renderOutline(outline) {
+      const outlineContent = document.getElementById('outlineContent');
+
+      outlineContent.innerHTML = `
+        <div class="outline-header">
+          <div>
+            <div class="outline-title">${outline.title}</div>
+            <div class="outline-subtitle">${outline.subtitle}</div>
+          </div>
+        </div>
+
+        ${outline.summary ? `
+        <div class="outline-summary">
+          <strong>简介：</strong>${outline.summary}
+        </div>
+        ` : ''}
+
+        ${outline.themes && outline.themes.length > 0 ? `
+        <div class="outline-section">
+          <h3>🎯 核心主题</h3>
+          <div class="outline-themes">
+            ${outline.themes.map(theme => `<span class="theme-tag">${theme}</span>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 18px; margin-bottom: 15px;">章节规划</h3>
+          ${outline.chapters.map(chapter => `
+            <div class="chapter-item">
+              <div class="chapter-header">
+                <span class="chapter-number">${chapter.chapterNumber}</span>
+                <span class="chapter-title">${chapter.title}</span>
+                <span class="chapter-period">${chapter.period.start} - ${chapter.period.end}</span>
+              </div>
+              <div class="chapter-focus">${chapter.focus}</div>
+              <div class="chapter-meta">
+                <span class="chapter-words">${chapter.estimatedWords} 字</span>
+                <button class="write-btn" data-chapter="${chapter.chapterNumber}">📝 撰写</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      // Add event listeners for write buttons
+      document.querySelectorAll('.write-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const chapterNumber = parseInt(btn.dataset.chapter);
+          writeChapter(chapterNumber);
+        });
+      });
+    }
+
+    // Write chapter
+    async function writeChapter(chapterNumber) {
+      const chapter = memoirOutline.chapters.find(c => c.chapterNumber === chapterNumber);
+      if (!chapter) return;
+
+      // Navigate to chapter panel
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      document.querySelector('[data-panel="chapter"]').classList.add('active');
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-chapter').classList.add('active');
+
+      const chapterContent = document.getElementById('chapterContent');
+      chapterContent.innerHTML = `
+        <div class="chapter-panel">
+          <div style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">✍️</div>
+            <div style="font-size: 18px; color: #6c757d;">正在撰写第 ${chapterNumber} 章...</div>
+            <div style="font-size: 14px; color: #adb5bd; margin-top: 10px;">这可能需要一些时间，请耐心等待</div>
+          </div>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`${API_BASE}/memoir/write`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            interviewId,
+            chapterNumber,
+            targetWords: chapter.estimatedWords,
+          }),
+        });
+
+        const data = await response.json();
+        renderChapter(data.chapter);
+        statusEl.textContent = `第 ${chapterNumber} 章撰写完成`;
+      } catch (error) {
+        console.error('Failed to write chapter:', error);
+        chapterContent.innerHTML = `
+          <div style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
+            <div style="font-size: 18px; color: #dc3545;">撰写失败</div>
+            <div style="font-size: 14px; color: #6c757d; margin-top: 10px;">请稍后再试</div>
+          </div>
+        `;
+        statusEl.textContent = '错误';
+      }
+    }
+
+    // Render chapter
+    function renderChapter(chapter) {
+      const chapterContent = document.getElementById('chapterContent');
+
+      chapterContent.innerHTML = `
+        <div class="chapter-content-header">
+          <div class="chapter-content-title">第 ${chapter.chapterNumber} 章：${chapter.title}</div>
+          <div class="chapter-content-meta">
+            时间跨度：${chapter.periodCovered.start} - ${chapter.periodCovered.end} |
+            字数：${chapter.wordCount}
+          </div>
+        </div>
+        <div class="chapter-text">
+          ${chapter.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+        </div>
+      `;
+    }
+
+    // Pagination state
+    let currentPage = 1;
+    let chaptersPerPage = 9;
+    let totalChapters = 0;
+    let allChapters = [];
+
+    // Load and render chapter list with pagination
+    async function loadChapterList(page = 1) {
+      if (!userId) return;
+
+      currentPage = page;
+
+      try {
+        showPanelLoading('chapter');
+
+        const response = await fetch(
+          `${API_BASE}/chapters?userId=${userId}&page=${page}&limit=${chaptersPerPage}`
+        );
+        const data = await response.json();
+
+        hidePanelLoading('chapter');
+
+        if (data.chapters && data.chapters.length > 0) {
+          allChapters = data.chapters;
+          totalChapters = data.total || data.chapters.length;
+          renderChapterList(data.chapters, data.page, data.totalPages || 1);
+        } else {
+          renderChapterListEmpty();
+        }
+      } catch (error) {
+        hidePanelLoading('chapter');
+        console.error('Failed to load chapters:', error);
+        renderChapterListEmpty();
+      }
+    }
+
+    // Render chapter list with pagination
+    function renderChapterList(chapters, currentPage = 1, totalPages = 1) {
+      const chapterGrid = document.getElementById('chapterGrid');
+      const chapterListContainer = chapterGrid.closest('.chapter-list-container');
+
+      chapterGrid.innerHTML = chapters.map((chapter, index) => `
+        <div class="chapter-card" data-chapter-id="${chapter.chapterId}">
+          <div class="chapter-card-header">
+            <span class="chapter-card-number">第 ${chapter.order || index + 1} 章</span>
+            <span class="chapter-card-status ${chapter.status}">${getStatusLabel(chapter.status)}</span>
+          </div>
+          <div class="chapter-card-title">${chapter.title}</div>
+          <div class="chapter-card-preview">${getChapterPreview(chapter.content)}</div>
+          <div class="chapter-card-meta">
+            <span>📝 ${chapter.wordCount || 0} 字</span>
+            <span>📅 ${formatDate(chapter.updatedAt)}</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Add click handlers
+      chapterGrid.querySelectorAll('.chapter-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const chapterId = card.dataset.chapterId;
+          showChapterDetail(chapterId);
+        });
+      });
+
+      // Add pagination if needed
+      let paginationContainer = chapterListContainer.querySelector('.pagination');
+      if (!paginationContainer && totalPages > 1) {
+        paginationContainer = document.createElement('div');
+        paginationContainer.className = 'pagination';
+        chapterListContainer.appendChild(paginationContainer);
+      }
+
+      if (totalPages > 1 && paginationContainer) {
+        renderPagination(paginationContainer, currentPage, totalPages);
+      }
+    }
+
+    // Render pagination controls
+    function renderPagination(container, currentPage, totalPages) {
+      const maxVisiblePages = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+
+      let html = `
+        <span class="pagination-info">
+          第 ${currentPage} / ${totalPages} 页 (共 ${totalChapters} 个章节)
+        </span>
+        <button ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
+          上一页
+        </button>
+      `;
+
+      // First page
+      if (startPage > 1) {
+        html += `<button data-page="1">1</button>`;
+        if (startPage > 2) {
+          html += `<span class="page-ellipsis">...</span>`;
+        }
+      }
+
+      // Page numbers
+      for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+      }
+
+      // Last page
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          html += `<span class="page-ellipsis">...</span>`;
+        }
+        html += `<button data-page="${totalPages}">${totalPages}</button>`;
+      }
+
+      html += `
+        <button ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
+          下一页
+        </button>
+      `;
+
+      container.innerHTML = html;
+
+      // Add click handlers
+      container.querySelectorAll('button[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const page = parseInt(btn.dataset.page);
+          loadChapterList(page);
+        });
+      });
+    }
+
+    // Load more (infinite scroll alternative)
+    async function loadMoreChapters() {
+      if (!userId) return;
+
+      const nextPage = currentPage + 1;
+
+      try {
+        const response = await fetch(
+          `${API_BASE}/chapters?userId=${userId}&page=${nextPage}&limit=${chaptersPerPage}`
+        );
+        const data = await response.json();
+
+        if (data.chapters && data.chapters.length > 0) {
+          allChapters.push(...data.chapters);
+          totalChapters = data.total || allChapters.length;
+          currentPage = nextPage;
+
+          const chapterGrid = document.getElementById('chapterGrid');
+
+          // Append new chapters
+          data.chapters.forEach((chapter, index) => {
+            const globalIndex = allChapters.length - data.chapters.length + index;
+            const card = document.createElement('div');
+            card.className = 'chapter-card';
+            card.dataset.chapterId = chapter.chapterId;
+            card.innerHTML = `
+              <div class="chapter-card-header">
+                <span class="chapter-card-number">第 ${chapter.order || globalIndex + 1} 章</span>
+                <span class="chapter-card-status ${chapter.status}">${getStatusLabel(chapter.status)}</span>
+              </div>
+              <div class="chapter-card-title">${chapter.title}</div>
+              <div class="chapter-card-preview">${getChapterPreview(chapter.content)}</div>
+              <div class="chapter-card-meta">
+                <span>📝 ${chapter.wordCount || 0} 字</span>
+                <span>📅 ${formatDate(chapter.updatedAt)}</span>
+              </div>
+            `;
+
+            card.addEventListener('click', () => {
+              showChapterDetail(chapter.chapterId);
+            });
+
+            chapterGrid.appendChild(card);
+          });
+
+          return data.chapters.length < chaptersPerPage; // Returns true if no more pages
+        }
+
+        return true; // No more chapters
+      } catch (error) {
+        console.error('Failed to load more chapters:', error);
+        return true; // Stop loading on error
+      }
+    }
+
+    // Render empty chapter list
+    function renderChapterListEmpty() {
+      const chapterGrid = document.getElementById('chapterGrid');
+      chapterGrid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="icon">📖</div>
+          <div class="text">回忆录章节尚未撰写</div>
+          <div class="hint">请先生成大纲，然后选择章节进行撰写</div>
+        </div>
+      `;
+    }
+
+    // Show chapter detail view
+    async function showChapterDetail(chapterId) {
+      try {
+        const response = await fetch(`${API_BASE}/chapters/${chapterId}?userId=${userId}`);
+        const chapter = await response.json();
+
+        const chapterContent = document.getElementById('chapterContent');
+
+        chapterContent.innerHTML = `
+          <div class="chapter-detail-view">
+            <div class="chapter-detail-header">
+              <div class="chapter-detail-title">${chapter.title}</div>
+              <div class="chapter-detail-meta">
+                <span>📝 ${chapter.wordCount || 0} 字</span>
+                <span>📅 ${formatDate(chapter.updatedAt)}</span>
+                <span>🏷️ ${getTypeLabel(chapter.type)}</span>
+              </div>
+            </div>
+            <div class="chapter-detail-toolbar">
+              <button class="back-btn" id="backToListBtn">← 返回列表</button>
+              <button class="edit-btn" onclick="exportChapter('${chapterId}', 'markdown')">📄 导出 Markdown</button>
+              <button class="export-btn" onclick="exportChapter('${chapterId}', 'pdf')">📕 导出 PDF</button>
+            </div>
+            <div class="chapter-text">
+              ${formatChapterContent(chapter.content)}
+            </div>
+          </div>
+        `;
+
+        // Add back button handler
+        document.getElementById('backToListBtn').addEventListener('click', () => {
+          loadChapterList();
+        });
+      } catch (error) {
+        console.error('Failed to load chapter detail:', error);
+        alert('加载章节详情失败');
+      }
+    }
+
+    // Export chapter
+    async function exportChapter(chapterId, format) {
+      try {
+        const response = await fetch(`${API_BASE}/chapters/${chapterId}/export/${format}?userId=${userId}`);
+
+        if (!response.ok) {
+          throw new Error('Export failed');
+        }
+
+        // Download file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chapter-${chapterId}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        statusEl.textContent = `章节已导出为 ${format.toUpperCase()}`;
+      } catch (error) {
+        console.error('Failed to export chapter:', error);
+        alert('导出失败，请稍后再试');
+      }
+    }
+
+    // Export all chapters
+    async function exportAllChapters() {
+      if (!userId || !memoirOutline) {
+        alert('请先完成采访和大纲生成');
+        return;
+      }
+
+      // For simplicity, export as markdown (PDF would need memoirId)
+      try {
+        // Use the first chapter to get memoirId
+        const response = await fetch(`${API_BASE}/chapters?userId=${userId}`);
+        const data = await response.json();
+
+        if (!data.chapters || data.chapters.length === 0) {
+          alert('没有可导出的章节');
+          return;
+        }
+
+        const memoirId = data.chapters[0].memoirId;
+        const exportResponse = await fetch(`${API_BASE}/memoirs/${memoirId}/export/pdf?userId=${userId}`);
+
+        if (!exportResponse.ok) {
+          throw new Error('Export failed');
+        }
+
+        const blob = await exportResponse.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `memoir-${memoirId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        statusEl.textContent = '回忆录已导出为 PDF';
+      } catch (error) {
+        console.error('Failed to export all chapters:', error);
+        alert('导出失败，请稍后再试');
+      }
+    }
+
+    // Helper functions
+    function getStatusLabel(status) {
+      const labels = {
+        'draft': '草稿',
+        'published': '已发布',
+        'archived': '已归档'
+      };
+      return labels[status] || status;
+    }
+
+    function getTypeLabel(type) {
+      const labels = {
+        'prologue': '序言',
+        'childhood': '童年',
+        'education': '教育',
+        'career': '职业',
+        'family': '家庭',
+        'travel': '旅行',
+        'reflections': '回顾',
+        'epilogue': '结语',
+        'other': '其他'
+      };
+      return labels[type] || type;
+    }
+
+    function getChapterPreview(content) {
+      const maxLength = 150;
+      const text = content.replace(/\n/g, ' ').trim();
+      return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function formatChapterContent(content) {
+      return content.split('\n\n')
+        .filter(p => p.trim())
+        .map(p => `<p>${p}</p>`)
+        .join('');
+    }
+
+    // Make exportChapter available globally
+    window.exportChapter = exportChapter;
+
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    toggleTimelineBtn.addEventListener('click', () => {
+      timelinePreview.classList.toggle('visible');
+    });
+
+    // Identity modal events
+    loadUserDataBtn.addEventListener('click', handleReturningUser);
+    createNewUserBtn.addEventListener('click', handleNewUser);
+
+    returningInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleReturningUser();
+      }
+    });
+
+    newUserInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleNewUser();
+      }
+    });
+
+    switchUserBtn.addEventListener('click', switchUser);
+
+    // Chapter list event listeners
+    document.getElementById('refreshChaptersBtn').addEventListener('click', loadChapterList);
+    document.getElementById('exportAllBtn').addEventListener('click', exportAllChapters);
+
+    // Initialize
+    initInterview();
+  </script>
+</body>
+</html>

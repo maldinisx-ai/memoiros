@@ -71,5 +71,7 @@ export interface ExtractedEntities {
     entities?: ReadonlyArray<string>;
     /** Detected events */
     events?: ReadonlyArray<string>;
+    /** Missing entities that would be useful to ask about */
+    missingEntities?: ReadonlyArray<string>;
 }
 //# sourceMappingURL=fact-verification.d.ts.map

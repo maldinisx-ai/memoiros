@@ -8,12 +8,11 @@ import { promisify } from "node:util";
 const execAsync = promisify(exec);
 /**
  * Default browse paths to try
+ * Paths use shell expansion (~) for cross-platform compatibility
  */
 const DEFAULT_BROWSE_PATHS = [
-    "C:/Users/COLORFUL/Documents/GitHub/gstack-main/browse/dist/browse.exe",
     "~/.claude/skills/gstack/browse/dist/browse",
     "~/.claude/skills/gstack/browse/dist/browse.exe",
-    "/c/Users/COLORFUL/.claude/skills/gstack/browse/dist/browse.exe",
 ];
 /**
  * gstack Browse Client
@@ -36,7 +35,8 @@ export class BrowseClient {
                 const cmd = process.platform === "win32"
                     ? `cmd /c "${path}" status`
                     : `"${path}" status`;
-                // Use type assertion to bypass strict type checking
+                // Note: Using any for shell option due to TypeScript type definition limitation
+                // on Windows where shell can be boolean but type only allows string
                 const options = {
                     timeout: 5000,
                     stdio: "pipe"
@@ -96,7 +96,8 @@ export class BrowseClient {
             }
             catch (error) {
                 // Continue to next source on failure
-                console.warn(`Failed to browse ${source}: ${error}`);
+                const message = error instanceof Error ? error.message : String(error);
+                console.warn(`Failed to browse ${source}: ${message}`);
             }
         }
         return results;
@@ -140,6 +141,8 @@ export class BrowseClient {
      */
     async execBrowse(command) {
         const fullCommand = `"${this.browsePath}" ${command}`;
+        // Note: Using any for shell option due to TypeScript type definition limitation
+        // on Windows where shell can be boolean but type only allows string
         const options = {
             timeout: this.timeout,
             maxBuffer: 10 * 1024 * 1024

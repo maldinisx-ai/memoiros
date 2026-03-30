@@ -1,0 +1,47 @@
+# 开发文件
+.vscode/
+.idea/
+*.log
+logs/
+
+# 测试文件
+test/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.ts
+jest.config.js
+
+# 数据和缓存
+data/
+cache/
+*.db
+*.sqlite
+
+# 环境配置
+.env
+.env.*
+!.env.example
+
+# 构建产物
+dist/
+*.tsbuildinfo
+
+# 文档（保留 README）
+docs/
+examples/
+*.md
+!README.md
+!CHANGELOG.md
+
+# Git
+.git/
+.gitignore
+.github/
+
+# 其他
+node_modules/
+.DS_Store
+*.swp
+*.swo
+exports/

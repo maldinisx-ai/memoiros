@@ -1,0 +1,20 @@
+{
+  "interviewId": "int_1774778586789_tm1istu",
+  "userId": "user_1774778586772",
+  "phase": "warmup",
+  "questions": [],
+  "answers": [
+    {
+      "answerId": "ans_1774778665192",
+      "questionId": "q_1774778614159",
+      "answer": "我出生在1985年10月1日",
+      "answeredAt": "2026-03-29T10:04:25.192Z"
+    },
+    {
+      "answerId": "ans_1774778800904",
+      "questionId": "q_1774778724245",
+      "answer": "我出生的地方是河北省唐山市丰润区沙柳河镇葛家屯村",
+      "answeredAt": "2026-03-29T10:06:40.904Z"
+    }
+  ]
+}

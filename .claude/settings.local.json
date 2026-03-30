@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/COLORFUL/.claude/skills/review/**)",
+      "Bash(pnpm run:*)",
+      "Bash(node --import tsx/esm test/fact-verifier.test.ts)",
+      "Bash(find D:/projects/fact-verifier-agent -name *.ts -o -name *.js)",
+      "Bash(pnpm test:*)",
+      "Bash(node --import tsx/esm test/pipeline.test.ts)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm test:pipeline)",
+      "Bash(NODE_OPTIONS=\"--experimental-vm-modules\" pnpm test:pipeline)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(NODE_OPTIONS=\"--experimental-vm-modules\" pnpm test)",
+      "Bash(pnpm rebuild:*)",
+      "Bash(node node_modules/.pnpm/better-sqlite3@12.8.0/node_modules/better-sqlite3/build.cmd)",
+      "Bash(timeout 10 pnpm server)",
+      "Bash(start http://localhost:3000/../web/index.html)",
+      "Bash(echo \"Please open: file:///d:/projects/memoiros/web/index.html\")",
+      "Bash(tasklist)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(pkill -f \"node.*server\")",
+      "Bash(pnpm build:*)",
+      "Bash(DOTENV_CONFIG_PATH=./.env node --import tsx/esm -e \"import\\(''dotenv''\\).then\\(\\({config}\\) => {config\\({path: ''./.env''}\\); console.log\\(''ANTHROPIC_BASE_URL:'', process.env.ANTHROPIC_BASE_URL\\);}\\)\")",
+      "Bash(curl -s http://localhost:11434/api/tags)",
+      "Bash(curl -s http://localhost:11434/api/chat -X POST -H \"Content-Type: application/json\" -d '{\"\"model\"\":\"\"qwen2.5:7b\"\",\"\"messages\"\":[{\"\"role\"\":\"\"user\"\",\"\"content\"\":\"\"你好\"\"}],\"\"stream\"\":false}')",
+      "Read(//d/models_cache/**)",
+      "Read(//d/Users/COLORFUL/.ollama/models/**)",
+      "Bash(ollama list:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl -s http://localhost:11434/api/chat -X POST -H \"Content-Type: application/json\" -d '{\"\"model\"\":\"\"qwen3:8b\"\",\"\"messages\"\":[{\"\"role\"\":\"\"user\"\",\"\"content\"\":\"\"你好\"\"}],\"\"stream\"\":false}')",
+      "Bash(curl -s http://localhost:3000/api/health)",
+      "Read(//c/Users/COLORFUL/AppData/Local/Temp/claude/d--projects/memoiros/f5006163-f7cf-47da-8763-d962ed919bcd/tasks/**)",
+      "Bash(pnpm list:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const data=JSON.parse\\(fs.readFileSync\\(''data/int_1774746855358_mn1u1h8.json'',''utf8''\\)\\);console.log\\(''Interview:'',data.interviewId\\);console.log\\(''User:'',data.userId\\);console.log\\(''Phase:'',data.phase\\);console.log\\(''Answers:'',data.answers.length\\);console.log\\(''Last answer:'',data.answers[0].answer\\);\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const d=JSON.parse\\(fs.readFileSync\\(''data/int_1774746855358_mn1u1h8.json'',''utf8''\\)\\);console.log\\(''✅ Interview ID:'',d.interviewId\\);console.log\\(''✅ User ID:'',d.userId\\);console.log\\(''✅ Phase:'',d.phase\\);console.log\\(''✅ Answers:'',d.answers.length\\);console.log\\(''✅ Answer text:'',d.answers[0].answer\\);console.log\\(''✅ Answer time:'',d.answers[0].answeredAt\\);\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\);fs.writeFileSync\\(''test-utf8.json'',JSON.stringify\\({test:''我1985年10月1日出生在河北唐山''},null,2\\),''utf8''\\);console.log\\(''✅ 测试文件已创建''\\);const data=JSON.parse\\(fs.readFileSync\\(''test-utf8.json'',''utf8''\\)\\);console.log\\(''读取内容:'',data.test\\);\")",
+      "Bash(node --input-type=\"module\" -e \"const r=await fetch\\(''http://localhost:3000/api/interview/process'',{method:''POST'',headers:{''Content-Type'':''application/json''},body:JSON.stringify\\({interviewId:''int_1774747862737_87bonl2'',answer:''我1985年10月出生''}\\)}\\);const d=await r.json\\(\\);console.log\\(''✅ 中文测试成功!''\\);\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const d=JSON.parse\\(fs.readFileSync\\(''data/int_1774747862737_87bonl2.json'',''utf8''\\)\\);console.log\\(''✅ 文件读取成功!''\\);console.log\\(''回答数量:'',d.answers.length\\);console.log\\(''最后一个回答:'',d.answers[d.answers.length-1].answer\\);\")",
+      "Bash(node --input-type=\"module\" -e \"const r=await fetch\\(''http://localhost:3000/api/preprocess'',{method:''POST'',headers:{''Content-Type'':''application/json''},body:JSON.stringify\\({userId:''encoding_test'',interviewId:''int_1774747862737_87bonl2'',includeTimeline:true,includeVoiceProfile:true}\\)}\\);const d=await r.json\\(\\);console.log\\(''✅ 预处理完成!''\\);console.log\\(''主题数量:'',d.profile.themes.length\\);console.log\\(''时间线事件:'',d.profile.timeline.length\\);console.log\\(''建议:'',d.suggestions\\);\")",
+      "Bash(node --input-type=\"module\" -e \"const r=await fetch\\(''http://localhost:3000/api/preprocess'',{method:''POST'',headers:{''Content-Type'':''application/json''},body:JSON.stringify\\({userId:''encoding_test'',interviewId:''int_1774747862737_87bonl2''}\\)}\\);const d=await r.json\\(\\);console.log\\(JSON.stringify\\(d,null,2\\)\\);\")",
+      "Bash(node --input-type=\"module\" -e \"const r=await fetch\\(''http://localhost:3000/api/preprocess'',{method:''POST'',headers:{''Content-Type'':''application/json''},body:JSON.stringify\\({userId:''encoding_test'',interviewId:''int_1774747862737_87bonl2''}\\)}\\);const d=await r.json\\(\\);console.log\\(''Status:'',d.error?''FAIL'':''OK''\\);if\\(d.profile\\){console.log\\(''BasicInfo:'',d.profile.basicInfo\\);console.log\\(''Timeline events:'',d.profile.timeline?.length\\);console.log\\(''Themes:'',d.profile.themes?.length\\);}console.log\\(''Summary:'',d.summary?.slice\\(100\\)\\);\")",
+      "Bash(node --input-type=\"module\" -e \"const r=await fetch\\(''''http://localhost:3000/api/preprocess'''',{method:''''POST'''',headers:{''''Content-Type'''':''''application/json''''},body:JSON.stringify\\({userId:''''encoding_test'''',interviewId:''''int_1774747862737_87bonl2'''',includeTimeline:true,includeVoiceProfile:true}\\)}\\);const d=await r.json\\(\\);console.log\\(JSON.stringify\\(d,null,2\\)\\);\")",
+      "Read(//c/Users/COLORFUL/Documents/GitHub/inkos-master/**)"
+    ],
+    "additionalDirectories": [
+      "D:\\projects\\fact-verifier-agent"
+    ]
+  }
+}

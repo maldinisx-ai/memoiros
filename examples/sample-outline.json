@@ -1,0 +1,188 @@
+{
+  "outlineId": "outline_user_zhang_san",
+  "userId": "user_zhang_san",
+  "generatedAt": "2026-03-30T12:40:00Z",
+  "structure": "chronological",
+  "memoirTitle": "《从小县城到深圳：一个程序员的奋斗之路》",
+  "totalEstimatedWords": 30000,
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "title": "第一章：红安大院里的童年",
+      "subtitle": "1985-1997",
+      "timePeriod": {
+        "startYear": 1985,
+        "endYear": 1997,
+        "description": "从出生到小学毕业"
+      },
+      "focus": "描述在红安县纺织厂宿舍大院里的童年生活，包括生活环境、玩伴、游戏等，展现80年代末90年代初小县城的生活风貌",
+      "estimatedWords": 3500,
+      "keyEvents": [
+        "出生在纺织厂宿舍",
+        "大院里的邻里关系",
+        "和小伙伴们捉迷藏、抓鱼摸虾",
+        "第一次看到电视机",
+        "小学毕业"
+      ],
+      "keyPeople": ["父亲", "母亲", "儿时玩伴"],
+      "keyPlaces": ["红安县", "纺织厂宿舍大院", "小河沟"],
+      "themes": ["纯真童年", "邻里温情", "时代印记"]
+    },
+    {
+      "chapterNumber": 2,
+      "title": "第二章：知识改变命运的信念",
+      "subtitle": "1997-2003",
+      "timePeriod": {
+        "startYear": 1997,
+        "endYear": 2003,
+        "description": "初中到高中，备战高考"
+      },
+      "focus": "讲述求学经历，重点描述老师的一句话带来的触动，以及如何通过努力考上重点大学的过程",
+      "estimatedWords": 4000,
+      "keyEvents": [
+        "初中老师的鼓励",
+        "开始刻苦学习",
+        "高中时期的压力与坚持",
+        "高考前的冲刺",
+        "接到录取通知书的时刻"
+      ],
+      "keyPeople": ["初中老师", "高中老师", "父母"],
+      "keyPlaces": ["红安县一中", "武汉大学"],
+      "themes": ["教育", "奋斗", "父母期望"]
+    },
+    {
+      "chapterNumber": 3,
+      "title": "第三章：珞珈山下的青春岁月",
+      "subtitle": "2003-2007",
+      "timePeriod": {
+        "startYear": 2003,
+        "endYear": 2007,
+        "description": "大学四年"
+      },
+      "focus": "描述在武汉大学的求学经历，包括专业学习、校园生活、结识妻子等",
+      "estimatedWords": 4500,
+      "keyEvents": [
+        "初入大学的兴奋与不适应",
+        "计算机专业的学习",
+        "参加社团活动",
+        "与未来的妻子相识",
+        "毕业选择的思考"
+      ],
+      "keyPeople": ["大学同学", "妻子"],
+      "keyPlaces": ["武汉大学", "珞珈山", "东湖"],
+      "themes": ["青春", "爱情", "成长"]
+    },
+    {
+      "chapterNumber": 4,
+      "title": "第四章：深圳，冒险的开始",
+      "subtitle": "2007-2010",
+      "timePeriod": {
+        "startYear": 2007,
+        "endYear": 2010,
+        "description": "初入职场"
+      },
+      "focus": "讲述选择深圳而非回老家的决定，以及创业公司的工作经历和成长",
+      "estimatedWords": 4000,
+      "keyEvents": [
+        "毕业选择：深圳还是老家",
+        "加入创业软件公司",
+        "加班与成长",
+        "从程序员到技术骨干",
+        "与妻子结婚"
+      ],
+      "keyPeople": ["创业公司老板", "同事", "妻子"],
+      "keyPlaces": ["深圳", "南山科技园"],
+      "themes": ["选择", "冒险", "职业发展"]
+    },
+    {
+      "chapterNumber": 5,
+      "title": "第五章：技术总监的进阶之路",
+      "subtitle": "2010-2015",
+      "timePeriod": {
+        "startYear": 2010,
+        "endYear": 2015,
+        "description": "职业上升期"
+      },
+      "focus": "描述在公司中的成长，从技术骨干到技术总监，以及大女儿出生带来的家庭责任",
+      "estimatedWords": 4000,
+      "keyEvents": [
+        "晋升为技术经理",
+        "带领团队做项目",
+        "成为技术总监",
+        "大女儿出生",
+        "开始思考创业"
+      ],
+      "keyPeople": ["大女儿", "团队成员", "创业伙伴"],
+      "keyPlaces": ["深圳"],
+      "themes": ["成长", "责任", "创业梦想"]
+    },
+    {
+      "chapterNumber": 6,
+      "title": "第六章：创业的艰难与坚持",
+      "subtitle": "2015-2018",
+      "timePeriod": {
+        "startYear": 2015,
+        "endYear": 2018,
+        "description": "创业初期"
+      },
+      "focus": "重点讲述创业过程中的挑战，包括资金链断裂、核心员工离职等危机，以及如何坚持下来",
+      "estimatedWords": 5000,
+      "keyEvents": [
+        "与同事共同创业",
+        "开发第一个产品",
+        "资金链断裂危机",
+        "核心员工离职",
+        "拿到第一笔融资",
+        "小女儿出生"
+      ],
+      "keyPeople": ["创业伙伴", "投资人", "小女儿"],
+      "keyPlaces": ["深圳", "写字楼"],
+      "themes": ["创业", "坚持", "危机应对"]
+    },
+    {
+      "chapterNumber": 7,
+      "title": "第七章：公司稳定发展",
+      "subtitle": "2018-2024",
+      "timePeriod": {
+        "startYear": 2018,
+        "endYear": 2024,
+        "description": "创业稳定期"
+      },
+      "focus": "描述公司逐步走上正轨，团队扩大，业务稳定，以及个人在这期间的思考和成长",
+      "estimatedWords": 3500,
+      "keyEvents": [
+        "公司发展到一百多人",
+        "业务稳定盈利",
+        "两个孩子长大",
+        "对人生的反思"
+      ],
+      "keyPeople": ["团队成员", "妻子", "两个女儿"],
+      "keyPlaces": ["深圳"],
+      "themes": ["稳定", "反思", "家庭"]
+    },
+    {
+      "chapterNumber": 8,
+      "title": "第八章：给孩子们的寄语",
+      "subtitle": "",
+      "timePeriod": {
+        "startYear": null,
+        "endYear": null,
+        "description": "人生感悟与寄语"
+      },
+      "focus": "总结人生经验，给孩子们一些建议和寄语，传递人生智慧",
+      "estimatedWords": 1500,
+      "keyEvents": [],
+      "keyPeople": ["孩子们"],
+      "keyPlaces": [],
+      "themes": ["人生感悟", "传承", "爱"]
+    }
+  ],
+  "summary": "这是一部按时间顺序组织的个人回忆录，共8章，约3万字。从湖北红安的童年开始，讲述求学、工作、创业的历程，最后以对人生的反思和对下一代的寄语作结。整体风格朴实真挚，注重细节描写和情感表达。",
+  "writingGuidelines": {
+    "voice": "第一人称回忆式叙述",
+    "tone": "平和、真诚、略带怀旧",
+    "style": "朴实无华，避免华丽辞藻",
+    "detail": "注重具体场景和细节描写",
+    "emotion": "用细节传达情感，而非直接描述"
+  }
+}

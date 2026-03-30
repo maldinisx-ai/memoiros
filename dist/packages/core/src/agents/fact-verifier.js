@@ -3,8 +3,24 @@
  *
  * Verifies historical facts, timelines, and era context using web sources
  */
+import { z } from "zod";
 import { BaseAgent } from "./base.js";
 import { BrowseClient } from "../utils/browse-client.js";
+/**
+ * Zod schema for LLM verification output
+ */
+const VerificationResultSchema = z.object({
+    status: z.enum(["PASS", "WARNING", "FAIL"]),
+    summary: z.string(),
+    confidence: z.number().min(0).max(1),
+    issues: z.array(z.object({
+        severity: z.enum(["critical", "warning", "info"]),
+        category: z.enum(["timeline", "era_context", "entity", "logic", "general"]),
+        description: z.string(),
+        suggestion: z.string()
+    })).optional(),
+    suggestions: z.array(z.string()).optional()
+});
 /**
  * Fact Verifier Agent
  *
@@ -192,7 +208,21 @@ ${entities ? `提取的实体：${JSON.stringify(entities)}` : ""}`;
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userPrompt }
             ], { temperature: 0.3 });
-            return this.parseVerificationResult(response.content, request.fact);
+            const result = this.parseVerificationResult(response.content, request.fact);
+            // Check if parsing failed (fallback result has confidence 0)
+            if (result.confidence === 0) {
+                this.log?.error(`[FactVerifier] LLM judgment failed to parse, raw response: ${response.content.slice(200)}`);
+                return {
+                    status: "WARNING",
+                    fact: request.fact,
+                    summary: "LLM 返回格式不正确，需要人工核实",
+                    issues: [],
+                    sources: [],
+                    confidence: 0,
+                    suggestions: ["请人工核实此陈述"],
+                };
+            }
+            return result;
         }
         catch (error) {
             this.log?.error(`[FactVerifier] LLM judgment failed: ${error}`);
@@ -250,6 +280,18 @@ URL：${r.url}
                 { role: "user", content: analysisPrompt }
             ], { temperature: 0.3 });
             const partialResult = this.parseVerificationResult(response.content, request.fact);
+            // Check if parsing failed
+            if (partialResult.confidence === 0) {
+                this.log?.warn("[FactVerifier] Browse analysis failed to parse, using minimal result");
+                return {
+                    sources: searchResults.map(r => ({
+                        url: r.url,
+                        title: r.title || r.url,
+                        excerpt: r.content.slice(0, 200),
+                        reliability: 0.5,
+                    })),
+                };
+            }
             // Add sources from browse results
             const verificationSources = searchResults.map(r => ({
                 url: r.url,
@@ -298,16 +340,22 @@ URL：${r.url}
             // Try to extract JSON
             const jsonMatch = content.match(/\{[\s\S]*\}/);
             if (jsonMatch) {
-                const parsed = JSON.parse(jsonMatch[0]);
-                return {
-                    status: parsed.status ?? "WARNING",
-                    fact,
-                    summary: parsed.summary ?? "",
-                    issues: parsed.issues ?? [],
-                    sources: [],
-                    confidence: parsed.confidence ?? 0.5,
-                    suggestions: parsed.suggestions ?? [],
-                };
+                try {
+                    const parsed = VerificationResultSchema.parse(JSON.parse(jsonMatch[0]));
+                    return {
+                        status: parsed.status,
+                        fact,
+                        summary: parsed.summary,
+                        issues: parsed.issues ?? [],
+                        sources: [],
+                        confidence: parsed.confidence,
+                        suggestions: parsed.suggestions ?? [],
+                    };
+                }
+                catch (parseError) {
+                    this.log?.error(`[FactVerifier] JSON parse failed: ${parseError}`);
+                    // Fall through to default response
+                }
             }
         }
         catch (error) {

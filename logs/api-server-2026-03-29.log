@@ -1,0 +1,88 @@
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:26:16"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:26:16"}
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:27:23"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:27:23"}
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:27:56"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:27:56"}
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:28:55"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:28:55"}
+{"level":"info","message":"[Interviewer] Starting interview for user: test_middleware","service":"api-server","timestamp":"2026-03-29 21:29:04"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774790944788_bymdo1b","service":"api-server","timestamp":"2026-03-29 21:29:04"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:29:04"}
+{"level":"info","message":"[Interviewer] LLM response: ],\n      \"priority\": \"high\",\n      \"rationale\": \"通过具体场景唤起童年记忆，自然引导用户描述时间、地点和情感细节，同时为后续探讨家庭关系奠定基础\"\n    }\n  ],\n  \"suggestedTopics\": [\"家乡的变迁\", \"家族传统\", \"成长转折点\"],\n  \"followupAreas\": [\"童年重要事件的影响\", \"家庭成员间的互动模式\"]\n}...","service":"api-server","timestamp":"2026-03-29 21:29:11"}
+{"level":"info","message":"[Interviewer] Parsed 1 questions","service":"api-server","timestamp":"2026-03-29 21:29:11"}
+{"duration":"6431ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:29:11","url":"/api/interview/start"}
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:30:16"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:30:16"}
+{"duration":"1ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":404,"timestamp":"2026-03-29 21:30:24","url":"/api/interview/process/stream"}
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:31:11"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:31:11"}
+{"interviewId":"test_stream_2","level":"info","message":"Processing answer with streaming","service":"api-server","timestamp":"2026-03-29 21:31:21"}
+{"interviewId":"test_stream_2","level":"error","message":"Interview not found","service":"api-server","timestamp":"2026-03-29 21:31:21"}
+{"duration":"3ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:31:21","url":"/api/interview/process/stream"}
+{"level":"info","message":"[Interviewer] Starting interview for user: test_stream_user","service":"api-server","timestamp":"2026-03-29 21:31:30"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774791090061_ze3nprq","service":"api-server","timestamp":"2026-03-29 21:31:30"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:31:30"}
+{"level":"info","message":"[Interviewer] LLM response: riority\": \"high\",\n      \"rationale\": \"通过具体场景引导受访者放松并建立信任，同时自然获取时间、地点、情感等关键信息，为后续深入挖掘家庭关系或家乡记忆奠定基础\"\n    }\n  ],\n  \"suggestedTopics\": [\"家庭传统\", \"家乡变迁\", \"早期价值观形成\"],\n  \"followupAreas\": [\"童年时期的重要人物关系\", \"特定事件对性格的影响\"]\n}...","service":"api-server","timestamp":"2026-03-29 21:31:35"}
+{"level":"info","message":"[Interviewer] Parsed 1 questions","service":"api-server","timestamp":"2026-03-29 21:31:35"}
+{"duration":"5734ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:31:35","url":"/api/interview/start"}
+{"interviewId":"int_1774791090061_ze3nprq","level":"info","message":"Processing answer with streaming","service":"api-server","timestamp":"2026-03-29 21:31:35"}
+{"level":"info","message":"[Interviewer] Processing answer for question: q_1774791095825","service":"api-server","timestamp":"2026-03-29 21:31:35"}
+{"level":"info","message":"[Interviewer] Extracted entities:","service":"api-server","timestamp":"2026-03-29 21:31:41"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774791090061_ze3nprq","service":"api-server","timestamp":"2026-03-29 21:31:43"}
+{"level":"info","message":"[Interviewer] Extracted 0 facts","service":"api-server","timestamp":"2026-03-29 21:31:49"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:31:49"}
+{"level":"info","message":"[Interviewer] LLM response: rson\"],\n      \"priority\": \"high\",\n      \"rationale\": \"通过具体场景引导用户回忆时间、地点和情感体验，同时为后续探讨家庭关系奠定基础\"\n    },\n    {\n      \"question\": \"如果用一个词形容你记忆中最鲜明的家乡印象，你会选择什么？是某种气味、声音，还是某个特定的场景？\",\n      \"questionType\": \"open\",\n      \"targetEntities\": [\"location\", \"emotion\", \"event\"],\n      \"priority\": \"high\",\n      \"rationale\": \"通过感官记忆触发具象回忆，帮助用户建立情感联结并自然引出时间线\"\n    }\n  ],\n  \"suggestedTopics\": [\"成长过程中最重要的转折点\", \"家庭中代际传递的价值观\"],\n  \"followupAreas\": [\"用户对'特别瞬间'的情感投射变化\", \"家乡记忆与当前生活状态的对比\"]\n}\n```...","service":"api-server","timestamp":"2026-03-29 21:31:57"}
+{"level":"info","message":"[Interviewer] Parsed 2 questions","service":"api-server","timestamp":"2026-03-29 21:31:57"}
+{"duration":"21764ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:31:57","url":"/api/interview/process/stream"}
+{"environment":"development","level":"info","message":"MemoirOS API server started","model":"qwen3:8b","port":"3000","provider":"ollama","service":"api-server","timestamp":"2026-03-29 21:33:09"}
+{"level":"info","message":"Server ready Open web/index.html in your browser to use the interface","service":"api-server","timestamp":"2026-03-29 21:33:09"}
+{"level":"info","message":"[Interviewer] Starting interview for user: test_context_user","service":"api-server","timestamp":"2026-03-29 21:33:20"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774791200727_55gowqb","service":"api-server","timestamp":"2026-03-29 21:33:20"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:33:20"}
+{"level":"info","message":"[Interviewer] LLM response: rity\": \"high\",\n      \"rationale\": \"通过具体场景引导用户回忆早期记忆，帮助建立情感连接，同时自然引入时间、地点和情感元素\"\n    }\n  ],\n  \"suggestedTopics\": [\"家乡的变化\", \"家庭传统\", \"成长中的重要人物\"],\n  \"followupAreas\": [\"童年时期的关键事件\", \"家庭关系的演变\", \"记忆中的特殊物品\"]\n}...","service":"api-server","timestamp":"2026-03-29 21:33:29"}
+{"level":"info","message":"[Interviewer] Parsed 1 questions","service":"api-server","timestamp":"2026-03-29 21:33:29"}
+{"level":"info","message":"[Interviewer] Context stats: {\"totalMessages\":0,\"currentWindow\":0,\"summaryCount\":0,\"compressionRatio\":1}","service":"api-server","timestamp":"2026-03-29 21:33:29"}
+{"duration":"8605ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:33:29","url":"/api/interview/start"}
+{"answerLength":35,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Processing answer","service":"api-server","timestamp":"2026-03-29 21:33:29"}
+{"answersCount":0,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Current interview data loaded","service":"api-server","timestamp":"2026-03-29 21:33:29"}
+{"level":"info","message":"[Interviewer] Processing answer for question: q_1774791209375","service":"api-server","timestamp":"2026-03-29 21:33:29"}
+{"level":"info","message":"[Interviewer] Extracted entities:","service":"api-server","timestamp":"2026-03-29 21:33:36"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774791200727_55gowqb","service":"api-server","timestamp":"2026-03-29 21:33:41"}
+{"level":"info","message":"[Interviewer] Extracted 1 facts","service":"api-server","timestamp":"2026-03-29 21:33:49"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:33:49"}
+{"level":"info","message":"[Interviewer] LLM response: y\": \"high\",\n      \"rationale\": \"通过具体场景引导用户回忆童年细节，自然引出时间、地点、情感和人物信息\"\n    },\n    {\n      \"question\": \"你和兄弟姐妹之间有没有什么特别的故事？比如一起经历过的趣事或者矛盾？\",\n      \"questionType\": \"open\",\n      \"targetEntities\": [\"people\", \"events\", \"emotion\"],\n      \"priority\": \"medium\",\n      \"rationale\": \"聚焦家庭关系中的互动细节，挖掘情感联结和成长经历\"\n    }\n  ],\n  \"suggestedTopics\": [\"南昌的变迁与记忆对比\", \"家庭传统习俗\"],\n  \"followupAreas\": [\"童年时期的特殊经历\", \"家庭价值观传承\"]\n}...","service":"api-server","timestamp":"2026-03-29 21:33:58"}
+{"level":"info","message":"[Interviewer] Parsed 2 questions","service":"api-server","timestamp":"2026-03-29 21:33:58"}
+{"level":"info","message":"[Interviewer] Context stats: {\"totalMessages\":2,\"currentWindow\":2,\"summaryCount\":0,\"compressionRatio\":1}","service":"api-server","timestamp":"2026-03-29 21:33:58"}
+{"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Agent response received","phase":"warmup","service":"api-server","timestamp":"2026-03-29 21:33:58"}
+{"answersCount":1,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Saving interview data","service":"api-server","timestamp":"2026-03-29 21:33:58"}
+{"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Interview data saved successfully","service":"api-server","timestamp":"2026-03-29 21:33:58"}
+{"duration":"28657ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:33:58","url":"/api/interview/process"}
+{"answerLength":35,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Processing answer","service":"api-server","timestamp":"2026-03-29 21:34:00"}
+{"answersCount":1,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Current interview data loaded","service":"api-server","timestamp":"2026-03-29 21:34:00"}
+{"level":"info","message":"[Interviewer] Processing answer for question: q_1774791240074","service":"api-server","timestamp":"2026-03-29 21:34:00"}
+{"level":"info","message":"[Interviewer] Extracted entities:","service":"api-server","timestamp":"2026-03-29 21:34:08"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774791200727_55gowqb","service":"api-server","timestamp":"2026-03-29 21:34:13"}
+{"level":"info","message":"[Interviewer] Extracted 0 facts","service":"api-server","timestamp":"2026-03-29 21:34:20"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:34:20"}
+{"level":"info","message":"[Interviewer] LLM response:  \"priority\": \"high\",\n      \"rationale\": \"通过具体场景唤起感官记忆，同时自然引导时间、地点、情感和人物信息\"\n    },\n    {\n      \"question\": \"在成长过程中，有没有哪位家人对你的影响特别深刻？可以讲讲你们之间发生过的特别故事吗？\",\n      \"questionType\": \"open\",\n      \"targetEntities\": [\"year\", \"location\", \"emotion\", \"person\"],\n      \"priority\": \"high\",\n      \"rationale\": \"聚焦家庭关系中的情感联结，挖掘代际互动中的独特记忆\"\n    }\n  ],\n  \"suggestedTopics\": [\"童年时期的特殊经历\", \"家庭传统与仪式\"],\n  \"followupAreas\": [\"关键人物的离世/迁徙事件\", \"重要物品的象征意义\"]\n}\n```...","service":"api-server","timestamp":"2026-03-29 21:34:29"}
+{"level":"info","message":"[Interviewer] Parsed 2 questions","service":"api-server","timestamp":"2026-03-29 21:34:29"}
+{"level":"info","message":"[Interviewer] Context stats: {\"totalMessages\":4,\"currentWindow\":4,\"summaryCount\":0,\"compressionRatio\":1}","service":"api-server","timestamp":"2026-03-29 21:34:29"}
+{"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Agent response received","phase":"warmup","service":"api-server","timestamp":"2026-03-29 21:34:29"}
+{"answersCount":2,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Saving interview data","service":"api-server","timestamp":"2026-03-29 21:34:29"}
+{"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Interview data saved successfully","service":"api-server","timestamp":"2026-03-29 21:34:29"}
+{"duration":"29425ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:34:29","url":"/api/interview/process"}
+{"answerLength":35,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Processing answer","service":"api-server","timestamp":"2026-03-29 21:34:31"}
+{"answersCount":2,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Current interview data loaded","service":"api-server","timestamp":"2026-03-29 21:34:31"}
+{"level":"info","message":"[Interviewer] Processing answer for question: q_1774791271550","service":"api-server","timestamp":"2026-03-29 21:34:31"}
+{"level":"info","message":"[Interviewer] Extracted entities:","service":"api-server","timestamp":"2026-03-29 21:34:37"}
+{"level":"info","message":"[Interviewer] Storage not available, skipping save for: int_1774791200727_55gowqb","service":"api-server","timestamp":"2026-03-29 21:34:43"}
+{"level":"info","message":"[Interviewer] Extracted 1 facts","service":"api-server","timestamp":"2026-03-29 21:34:55"}
+{"level":"info","message":"[Interviewer] Calling LLM for question generation...","service":"api-server","timestamp":"2026-03-29 21:34:55"}
+{"level":"info","message":"[Interviewer] LLM response: rity\": \"high\",\n      \"rationale\": \"通过出生年份和地点建立基础信息框架，同时引导用户描述童年环境与情感体验，为后续深入挖掘家庭背景做铺垫\"\n    },\n    {\n      \"question\": \"在您记忆中，家乡最让您怀念的场景是什么？比如某个特定的季节、地点或者与亲人共处的时刻？\",\n      \"questionType\": \"followup\",\n      \"targetEntities\": [\"location\", \"year\", \"emotion\", \"person\"],\n      \"priority\": \"medium\",\n      \"rationale\": \"通过具体场景唤起感官记忆，同时自然引入时间维度和情感联结，帮助用户建立叙事连贯性\"\n    }\n  ],\n  \"suggestedTopics\": [\"家庭重要节日记忆\", \"童年时代的重要人物\"],\n  \"followupAreas\": [\"家乡变迁与个人成长的关系\", \"特定记忆背后的情感转折点\"]\n}\n```...","service":"api-server","timestamp":"2026-03-29 21:35:04"}
+{"level":"info","message":"[Interviewer] Parsed 2 questions","service":"api-server","timestamp":"2026-03-29 21:35:04"}
+{"level":"info","message":"[Interviewer] Context stats: {\"totalMessages\":6,\"currentWindow\":6,\"summaryCount\":0,\"compressionRatio\":1}","service":"api-server","timestamp":"2026-03-29 21:35:04"}
+{"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Agent response received","phase":"warmup","service":"api-server","timestamp":"2026-03-29 21:35:04"}
+{"answersCount":3,"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Saving interview data","service":"api-server","timestamp":"2026-03-29 21:35:04"}
+{"interviewId":"int_1774791200727_55gowqb","level":"info","message":"Interview data saved successfully","service":"api-server","timestamp":"2026-03-29 21:35:04"}
+{"duration":"32544ms","level":"info","message":"HTTP request","method":"POST","service":"api-server","status":200,"timestamp":"2026-03-29 21:35:04","url":"/api/interview/process"}

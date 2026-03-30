@@ -10,6 +10,13 @@ export interface Logger {
 }
 
 /**
+ * Create a logger with the given prefix
+ */
+export function createLogger(prefix: string): Logger {
+  return new ConsoleLogger(prefix);
+}
+
+/**
  * Console logger
  */
 export class ConsoleLogger implements Logger {

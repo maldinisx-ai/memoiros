@@ -8,6 +8,10 @@ export interface Logger {
     debug?(...args: unknown[]): void;
 }
 /**
+ * Create a logger with the given prefix
+ */
+export declare function createLogger(prefix: string): Logger;
+/**
  * Console logger
  */
 export declare class ConsoleLogger implements Logger {

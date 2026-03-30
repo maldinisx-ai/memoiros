@@ -1,0 +1,21 @@
+{
+  "watch": [
+    "server/**/*.ts",
+    "packages/**/*.ts"
+  ],
+  "ext": "ts,json",
+  "ignore": [
+    "dist/**/*.js",
+    "node_modules/**",
+    "test/**",
+    "data/**",
+    "logs/**"
+  ],
+  "exec": "node --import tsx/esm server/index.ts",
+  "env": {
+    "NODE_ENV": "development",
+    "LOG_LEVEL": "debug"
+  },
+  "delay": 1000,
+  "legacyWatch": false
+}

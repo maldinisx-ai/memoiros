@@ -2,6 +2,12 @@
  * Logger interface
  */
 /**
+ * Create a logger with the given prefix
+ */
+export function createLogger(prefix) {
+    return new ConsoleLogger(prefix);
+}
+/**
  * Console logger
  */
 export class ConsoleLogger {

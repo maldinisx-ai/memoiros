@@ -1,0 +1,181 @@
+{
+  "userId": "user_zhang_san",
+  "interviewId": "int_1774746855358_mn1u1h8",
+  "generatedAt": "2026-03-30T12:35:00Z",
+  "basicInfo": {
+    "name": "张三",
+    "birthYear": 1985,
+    "birthPlace": "湖北省红安县",
+    "currentLocation": "广东省深圳市",
+    "education": "武汉大学 计算机科学与技术 (2003-2007)",
+    "occupation": "软件公司技术总监 / 创业者",
+    "familyStatus": "已婚，有两个女儿"
+  },
+  "lifeTimeline": {
+    "timelineId": "timeline_user_zhang_san",
+    "events": [
+      {
+        "eventId": "evt_001",
+        "date": { "type": "exact", "year": 1985, "month": null, "day": null },
+        "title": "出生于湖北红安",
+        "description": "出生于湖北省红安县的一个小县城，父亲在纺织厂工作",
+        "category": "birth",
+        "importance": "critical",
+        "confidence": 0.95
+      },
+      {
+        "eventId": "evt_002",
+        "date": { "type": "approximate", "year": 1991, "yearRange": null },
+        "title": "小学时期",
+        "description": "在红安县上小学，住在纺织厂宿舍大院里，与邻居孩子们一起玩耍",
+        "category": "education",
+        "importance": "high",
+        "confidence": 0.9
+      },
+      {
+        "eventId": "evt_003",
+        "date": { "type": "exact", "year": 2003 },
+        "title": "考入武汉大学",
+        "description": "以优异成绩考入武汉大学计算机科学与技术专业，是县里为数不多考上重点大学的学生",
+        "category": "education",
+        "importance": "critical",
+        "confidence": 0.98
+      },
+      {
+        "eventId": "evt_004",
+        "date": { "type": "exact", "year": 2007 },
+        "title": "大学毕业，赴深圳工作",
+        "description": "大学毕业选择去深圳一家创业软件公司工作，开始职业生涯",
+        "category": "career",
+        "importance": "high",
+        "confidence": 0.95
+      },
+      {
+        "eventId": "evt_005",
+        "date": { "type": "exact", "year": 2010 },
+        "title": "结婚",
+        "description": "与大学同学结婚，在深圳组建家庭",
+        "category": "family",
+        "importance": "high",
+        "confidence": 0.95
+      },
+      {
+        "eventId": "evt_006",
+        "date": { "type": "exact", "year": 2011 },
+        "title": "大女儿出生",
+        "description": "第一个孩子出生，是个女儿",
+        "category": "family",
+        "importance": "high",
+        "confidence": 0.95
+      },
+      {
+        "eventId": "evt_007",
+        "date": { "type": "exact", "year": 2015 },
+        "title": "创业",
+        "description": "与同事共同创业，做企业服务软件",
+        "category": "career",
+        "importance": "critical",
+        "confidence": 0.95
+      },
+      {
+        "eventId": "evt_008",
+        "date": { "type": "exact", "year": 2016 },
+        "title": "小女儿出生",
+        "description": "第二个孩子出生，是个女儿",
+        "category": "family",
+        "importance": "high",
+        "confidence": 0.95
+      }
+    ],
+    "metadata": {
+      "earliestYear": 1985,
+      "latestYear": 2016,
+      "totalEvents": 8,
+      "verifiedEvents": 8,
+      "timeSpan": 31
+    }
+  },
+  "entities": {
+    "people": [
+      { "name": "父亲", "relationship": "父亲", "mentions": 5 },
+      { "name": "母亲", "relationship": "母亲", "mentions": 3 },
+      { "name": "妻子", "relationship": "配偶", "mentions": 4 },
+      { "name": "大女儿", "relationship": "女儿", "mentions": 3 },
+      { "name": "小女儿", "relationship": "女儿", "mentions": 2 },
+      { "name": "大学同学", "relationship": "同学/同事", "mentions": 2 },
+      { "name": "老师", "relationship": "老师", "mentions": 1 }
+    ],
+    "places": [
+      { "name": "湖北省红安县", "type": "birthplace", "importance": "high" },
+      { "name": "武汉大学", "type": "education", "importance": "critical" },
+      { "name": "深圳", "type": "residence", "importance": "high" },
+      { "name": "纺织厂宿舍", "type": "residence", "importance": "medium" }
+    ],
+    "organizations": [
+      { "name": "武汉大学", "type": "education", "years": [2003, 2007] },
+      { "name": "深圳软件公司", "type": "employer", "years": [2007, 2015] },
+      { "name": "创业公司", "type": "employer", "years": [2015, null] }
+    ]
+  },
+  "voiceProfile": {
+    "tone": "平和、真诚、略带怀旧",
+    "style": {
+      "sentenceLength": "中等偏短，句子结构简单直接",
+      "vocabulary": "朴实无华，常用口语化表达",
+      "preferredPhrases": [
+        "现在想想",
+        "那时候",
+        "从小",
+        "我记得"
+      ],
+      "avoidPhrases": [
+        "华丽辞藻",
+        "过于书面化的表达"
+      ]
+    },
+    "emotionalTone": {
+      "nostalgia": "高 - 对童年和早年经历充满怀念",
+      "gratitude": "高 - 对父母、妻子心存感激",
+      "determination": "中 - 体现奋斗精神",
+      "regret": "低 - 少量对陪伴家人不足的遗憾"
+    },
+    "narrativeStyle": {
+      "perspective": "第一人称回忆式叙述",
+      "pacing": "平缓，娓娓道来",
+      "detail": "注重细节描写，善于用具体场景唤起回忆"
+    }
+  },
+  "themes": [
+    {
+      "theme": "奋斗与成长",
+      "description": "从县城到重点大学，从打工者到创业者，体现了个人奋斗的历程",
+      "keywords": ["努力", "选择", "冒险", "坚持"],
+      "importance": "critical"
+    },
+    {
+      "theme": "家庭与责任",
+      "description": "重视家庭，对父母、妻子、孩子的爱与责任",
+      "keywords": ["父母", "妻子", "孩子", "家庭"],
+      "importance": "high"
+    },
+    {
+      "theme": "时代变迁",
+      "description": "个人成长与时代发展相互映衬，见证了互联网行业的兴起",
+      "keywords": ["互联网", "创业", "深圳"],
+      "importance": "medium"
+    }
+  ],
+  "storyStructure": {
+    "opening": "从出生地红安开始，描述童年生活环境",
+    "development": "求学经历、职业发展、创业历程",
+    "climax": "2015年创业的决定与挑战",
+    "ending": "对人生的反思与感悟，对下一代的寄语"
+  },
+  "summary": "张三，1985年出生于湖北省红安县，通过自己的努力考上武汉大学计算机专业，毕业后赴深圳发展。从普通程序员成长为技术总监，2015年与同事创业。已婚，有两个女儿。回顾人生，他认为最重要的是敢于尝试、勇于承担，但也表达了对陪伴家人时间不足的遗憾。",
+  "suggestions": [
+    "可以补充更多关于创业过程中的具体故事和挑战",
+    "可以增加更多关于与妻子相识相恋的细节",
+    "可以补充更多关于两个女儿成长的故事",
+    "可以增加对父母具体事例的回忆"
+  ]
+}
