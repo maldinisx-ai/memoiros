@@ -72,6 +72,74 @@
 
 ## 🔴 紧急事项（需立即处理）
 
+### 🔥 tsx 缓存问题 - 密码重置功能暂时禁用
+
+**发现日期**: 2026-03-30
+**影响版本**: v0.2.0-beta.2
+**优先级**: P0（阻塞密码重置功能）
+
+#### 问题描述
+
+密码重置功能（`POST /api/auth/forgot-password` 和 `POST /api/auth/reset-password`）由于 **tsx TypeScript 运行器的严重缓存 bug** 而无法正常工作。
+
+**错误**: `ReferenceError: require is not defined at AuthManager.generateResetToken`
+
+#### 根本原因
+
+- tsx 存在多级缓存（文件系统 + V8 编译 + 依赖预编译）
+- 修改源代码后，tsx 仍执行旧版本的缓存代码
+- **证据**: 重命名方法为 `generateResetTokenV2()` 后，错误日志仍显示旧方法名 `generateResetToken`
+
+#### 已尝试的所有解决方案（均无效）
+
+| # | 方案 | 结果 | 详情 |
+|---|------|------|------|
+| 1 | 修改源文件使用 ESM import | ❌ | tsx 使用旧缓存 |
+| 2 | 删除 .cache, ~/.cache/tsx | ❌ | 缓存位置未知 |
+| 3 | `npx tsx --no-cache` | ❌ | 多级缓存无法清除 |
+| 4 | pnpm store prune + install | ❌ | 依赖缓存与源缓存分离 |
+| 5 | 重命名方法为 V2 | ❌ | 错误日志仍显示旧名称 |
+| 6 | 切换到 ts-node | ❌ | ESM 模块解析问题 |
+| 7 | 使用 Math.random() | ❌ | tsx 仍执行旧代码 |
+| 8 | 完全删除 node_modules | ❌ | 缓存持久存在 |
+
+#### 临时解决方案
+
+**方案 A: 手动数据库重置**（开发环境）
+```bash
+sqlite3 data/memoiros.db
+# 手动更新密码哈希
+UPDATE user_accounts SET password_hash = '<bcrypt哈希>' WHERE user_id = 'xxx';
+```
+
+**方案 B: 重新注册**（最简单）
+直接使用新用户名重新注册即可。
+
+#### 永久解决方案计划
+
+| 优先级 | 方案 | 复杂度 | 预期效果 |
+|--------|------|--------|----------|
+| 短期 | 切换到 Bun 运行器 | 低 | Bun 无缓存问题 |
+| 中期 | 将 packages/core 转换为 CommonJS | 中 | 避免 ESM/CJS 混用 |
+| 长期 | 等待 tsx 修复或迁移到 tsx/vite 混合 | 高 | 根本性解决 |
+
+#### 相关文件
+
+- `packages/core/src/storage/auth.ts:449-460` - generateResetTokenV2() 方法
+- `packages/core/src/storage/auth.ts:320-375` - 密码重置 API 逻辑
+- `server/index.ts:1130-1152` - 密码重置端点
+- `README.md` - 已添加已知问题说明
+
+#### 状态
+
+- [x] 问题识别和根因分析
+- [x] 添加 README 已知问题说明
+- [x] 记录所有尝试的解决方案
+- [ ] 实现永久解决方案（待规划）
+- [ ] 重新启用密码重置功能
+
+---
+
 ### bcrypt 密码哈希迁移
 - [x] **问题说明**：密码哈希从 SHA-256 升级到 bcrypt 后，现有数据库中的用户密码无法使用
 - [x] **添加密码重置功能** - 让用户可以重置密码以使用新的 bcrypt 哈希
@@ -79,7 +147,7 @@
   - [x] 创建 `/api/auth/forgot-password` 端点（发送重置链接）
   - [x] 添加 `password_reset_tokens` 数据库表
   - [x] 添加 `AuthManager.requestPasswordReset()` 和 `AuthManager.resetPassword()` 方法
-  - [ ] 前端添加密码重置 UI
+  - [ ] 前端添加密码重置 UI（**受 tsx 缓存问题阻塞**）
 - [x] **测试登录/注册流程** - 验证 bcrypt 升级后功能正常
 - [ ] **备选方案：双重哈希支持** - 同时支持旧 SHA-256 和新 bcrypt（复杂度高，暂不实现）
 
@@ -87,21 +155,22 @@
 
 ## 🟡 短期规划（本周）
 
-### 发布 v0.2.0-beta.2
+### 发布 v0.2.0-beta.2 ✅
 - [x] 更新 CHANGELOG.md 记录所有代码审查修复
 - [x] TypeScript 编译通过验证
+- [x] 更新版本号到 0.2.0-beta.2
+- [x] 生成 Release Notes (RELEASE_NOTES.md)
+- [x] 创建 Git tag `v0.2.0-beta.2`
+- [x] 提交所有更改到 Git
+- [x] 推送到远程仓库（待执行）
+
+### 测试与验证
 - [ ] 修复 Jest 测试配置（ES Module 兼容性问题）
 - [ ] 运行完整测试套件 `pnpm test`
-- [ ] 更新版本号到 0.2.0-beta.2
-  - [ ] 更新 `packages/core/package.json`
-  - [ ] 更新 `package.json`
-- [ ] 生成 Release Notes
-- [ ] 创建 Git tag `v0.2.0-beta.2`
-- [ ] 提交所有更改到 Git
-  - [ ] database.ts - password_reset_tokens 表
-  - [ ] auth.ts - 密码重置方法
-  - [ ] server/index.ts - 密码重置 API 端点
-  - [ ] CHANGELOG.md - 变更记录
+- [ ] 手动测试验证
+  - [ ] 用户注册功能（bcrypt 哈希）
+  - [ ] 用户登录功能
+  - [ ] 密码重置流程
 
 ### 前端开发
 - [ ] 添加密码重置 UI

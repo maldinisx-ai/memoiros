@@ -830,6 +830,78 @@ A: 修改 `.env` 文件中的 `LLM_MODEL` 变量，然后重启服务器。
 
 ---
 
+## 已知问题
+
+### 🔴 密码重置功能 - tsx 缓存问题
+
+**状态**: 暂时禁用 | **优先级**: 高 | **影响版本**: v0.2.0-beta.2
+
+#### 问题描述
+
+密码重置功能（`POST /api/auth/forgot-password` 和 `POST /api/auth/reset-password`）由于 **tsx TypeScript 运行器的严重缓存 bug** 而无法正常工作。
+
+#### 根本原因
+
+- tsx 存在多级缓存（文件系统 + V8 编译 + 依赖预编译）
+- 即使删除 `node_modules`、清除 pnpm 缓存、使用 `--no-cache` 都无效
+- 修改源代码后，tsx 仍执行旧版本的缓存代码
+- 重命名类方法也无法触发重新编译
+
+#### 已尝试的解决方案
+
+| 方案 | 结果 |
+|------|------|
+| 修改源文件使用 ESM import | ❌ tsx 使用旧缓存 |
+| 删除所有缓存目录 | ❌ 缓存位置未知/深度嵌套 |
+| `npx tsx --no-cache` | ❌ 多级缓存无法清除 |
+| pnpm store prune + install | ❌ 依赖缓存与源缓存分离 |
+| 重命名方法（V2） | ❌ 错误日志仍显示旧方法名 |
+| 切换到 ts-node | ❌ ESM 模块解析问题 |
+
+#### 临时解决方案
+
+**方案 A：手动数据库重置**（开发环境）
+
+```bash
+# 进入数据库
+sqlite3 data/memoiros.db
+
+# 查看用户
+SELECT user_id, username, email FROM user_accounts;
+
+# 手动设置新密码（使用 bcrypt）
+# 在 Node.js 中生成哈希：
+node -e "console.log(require('bcrypt').hashSync('new_password', 12))"
+
+# 更新密码
+UPDATE user_accounts
+SET password_hash = '<生成的bcrypt哈希>'
+WHERE user_id = 'user_xxx';
+```
+
+**方案 B：重新注册**（最简单）
+
+直接使用新用户名重新注册即可。
+
+#### 永久解决方案计划
+
+1. **短期**: 切换到 Bun 运行器（无缓存问题）
+2. **中期**: 将 `packages/core` 转换为 CommonJS
+3. **长期**: 等待 tsx 修复缓存 bug 或迁移到 tsx/ts-node 混合方案
+
+#### 相关文件
+
+- `packages/core/src/storage/auth.ts:449-460` - generateResetTokenV2() 方法
+- `packages/core/src/storage/auth.ts:320-375` - 密码重置 API 逻辑
+- `server/index.ts:1130-1152` - 密码重置端点
+
+#### 更新日志
+
+- 2026-03-30: 发现 tsx 缓存问题，禁用密码重置功能
+- 预计 v0.2.0-beta.3: 实现永久解决方案
+
+---
+
 ## 路线图
 
 ### Phase 1: 核心功能 ✅
