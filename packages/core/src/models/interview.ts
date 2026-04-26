@@ -125,6 +125,7 @@ export interface InterviewResponse {
   readonly suggestedQuestions?: ReadonlyArray<InterviewQuestion>;
   readonly summary?: string;        // Summary of what was learned in this session
   readonly needsClarification?: ReadonlyArray<string>;  // Topics that need more detail
+  readonly phaseChanged?: boolean;   // Whether the phase was auto-detected as changed
 }
 
 /**
